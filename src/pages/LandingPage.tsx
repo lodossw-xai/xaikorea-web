@@ -5,9 +5,11 @@
  */
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
+import useI18n from '../hooks/useI18n';
 
 function LandingPage(): ReactElement {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t, language, setLanguage } = useI18n();
 
   // Initialize dark mode state from current DOM state
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -58,32 +60,46 @@ function LandingPage(): ReactElement {
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#home"
               >
-                홈
+                {t('nav.home')}
               </a>
               <a
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#services"
               >
-                서비스
+                {t('nav.services')}
               </a>
               <a
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#advisors"
               >
-                자문단
+                {t('nav.advisors')}
               </a>
               <a
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#team"
               >
-                팀 소개
+                {t('nav.team')}
               </a>
 
               <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full px-1 py-1">
-                <button className="px-3 py-1 text-xs font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">
+                <button
+                  className={`px-3 py-1 text-xs font-bold transition ${
+                    language === 'en'
+                      ? 'bg-gray-900 text-white rounded-full'
+                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                  }`}
+                  onClick={() => setLanguage('en')}
+                >
                   EN
                 </button>
-                <button className="px-3 py-1 text-xs font-medium bg-gray-900 text-white rounded-full transition">
+                <button
+                  className={`px-3 py-1 text-xs font-bold transition ${
+                    language === 'ko'
+                      ? 'bg-gray-900 text-white rounded-full'
+                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                  }`}
+                  onClick={() => setLanguage('ko')}
+                >
                   KR
                 </button>
               </div>
@@ -92,7 +108,7 @@ function LandingPage(): ReactElement {
                 className="bg-primary hover:bg-primary-hover text-black font-bold py-2.5 px-6 rounded-lg transition shadow-lg shadow-yellow-500/20"
                 href="#contact"
               >
-                문의하기
+                {t('nav.contact')}
               </a>
 
               <button
@@ -134,36 +150,50 @@ function LandingPage(): ReactElement {
               href="#home"
               onClick={() => setMobileMenuOpen(false)}
             >
-              홈
+              {t('nav.home')}
             </a>
             <a
               className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
               href="#services"
               onClick={() => setMobileMenuOpen(false)}
             >
-              서비스
+              {t('nav.services')}
             </a>
             <a
               className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
               href="#advisors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              자문단
+              {t('nav.advisors')}
             </a>
             <a
               className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
               href="#team"
               onClick={() => setMobileMenuOpen(false)}
             >
-              팀 소개
+              {t('nav.team')}
             </a>
 
             <div className="flex items-center justify-center gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
               <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full px-1 py-1">
-                <button className="px-3 py-1 text-xs font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">
+                <button
+                  className={`px-3 py-1 text-xs font-bold transition ${
+                    language === 'en'
+                      ? 'bg-gray-900 text-white rounded-full'
+                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                  }`}
+                  onClick={() => setLanguage('en')}
+                >
                   EN
                 </button>
-                <button className="px-3 py-1 text-xs font-medium bg-gray-900 text-white rounded-full transition">
+                <button
+                  className={`px-3 py-1 text-xs font-bold transition ${
+                    language === 'ko'
+                      ? 'bg-gray-900 text-white rounded-full'
+                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                  }`}
+                  onClick={() => setLanguage('ko')}
+                >
                   KR
                 </button>
               </div>
@@ -187,7 +217,7 @@ function LandingPage(): ReactElement {
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
             >
-              문의하기
+              {t('nav.contact')}
             </a>
           </div>
         </div>
@@ -237,23 +267,21 @@ function LandingPage(): ReactElement {
                 <span className="material-symbols-outlined text-sm animate-pulse">
                   hub
                 </span>
-                <span>Data-Driven Intelligence</span>
+                <span>{t('hero.badge')}</span>
               </div>
 
               <h1 className="font-display font-extrabold text-5xl lg:text-7xl text-gray-900 dark:text-white leading-tight mb-8">
-                당신의 해답,
+                {t('hero.title1')}
                 <br />
                 <span className="relative inline-block">
                   <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-ai-blue to-ai-green">
-                    우리의 솔루션.
+                    {t('hero.title2')}
                   </span>
                 </span>
               </h1>
 
               <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-lg leading-relaxed keep-all">
-                LLM & RAG 기술로 세무/회계의 혁신을 만듭니다. 복잡한 규정에 대한
-                정확한 근거와 해답을 제시하여 세무사와 회계사의 업무를 강력하게
-                지원합니다.
+                {t('hero.description')}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -261,7 +289,7 @@ function LandingPage(): ReactElement {
                   className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-black font-bold text-lg py-4 px-8 rounded-lg transition shadow-xl shadow-yellow-500/20 group"
                   href="#contact"
                 >
-                  데모 신청하기
+                  {t('hero.cta_demo')}
                   <span className="material-symbols-outlined group-hover:translate-x-1 transition">
                     arrow_forward
                   </span>
