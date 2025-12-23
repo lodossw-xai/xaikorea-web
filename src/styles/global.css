@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import 'tailwindcss';
+
+/* Enable class-based dark mode for Tailwind CSS v4 */
+/* This overrides the default prefers-color-scheme behavior */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Colors */
+  --color-primary: #ffd700;
+  --color-primary-hover: #e6c200;
+  --color-background-light: #ffffff;
+  --color-background-dark: #0f172a;
+  --color-hero-dark: #0b1120;
+  --color-surface-light: #f8fafc;
+  --color-surface-dark: #1e293b;
+  --color-ai-blue: #3b82f6;
+  --color-ai-green: #10b981;
+
+  /* Fonts */
+  --font-family-display: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif;
+  --font-family-body: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif;
+
+  /* Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out 3s infinite;
+  --animate-blob: blob 7s infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-flow-grid: flowGrid 20s linear infinite;
+  --animate-particle-drift: particleDrift 12s linear infinite;
+  --animate-particle-drift-delayed: particleDrift 12s linear infinite 6s;
+  --animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
+
+  /* Background Images */
+  --background-image-tech-grid:
+    linear-gradient(to right, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+
+  --background-image-tech-grid-dark:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes flowGrid {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+@keyframes particleDrift {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(200px, -150px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-family-body);
+    background-color: var(--color-background-light);
+    color: rgb(31 41 55);
+    transition: colors 300ms;
+  }
+
+  :root.dark body {
+    background-color: var(--color-background-dark);
+    color: rgb(229 231 235);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: rgb(243 244 246);
+  }
+
+  :root.dark ::-webkit-scrollbar-track {
+    background-color: rgb(30 41 59);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(209 213 219);
+    border-radius: 4px;
+  }
+
+  :root.dark ::-webkit-scrollbar-thumb {
+    background-color: rgb(71 85 105);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(156 163 175);
+  }
+
+  :root.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(100 116 139);
+  }
+}
+
+@layer components {
+  /* Interactive Card */
+  .interactive-card {
+    transition: transform 300ms;
+  }
+
+  .interactive-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+
+  /* Hover Grid Cell */
+  .hover-grid-cell {
+    transition: all 500ms;
+  }
+
+  .hover-grid-cell:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+    transition:
+      background-color 0s,
+      box-shadow 0s;
+  }
+
+  /* Reveal Text Animation */
+  .reveal-text {
+    opacity: 0;
+    transform: translateY(32px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  /* Material Icons */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Keep All (Korean text wrapping) */
+  .keep-all {
+    word-break: keep-all;
+  }
+
+  /* Dark Mode Hero Section */
+  :root.dark #home {
+    background-color: var(--color-hero-dark) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal-text {
+    opacity: 1;
+    transform: translateY(0);
+    animation: none;
+  }
+}
