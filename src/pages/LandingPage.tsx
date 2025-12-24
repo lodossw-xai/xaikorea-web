@@ -301,7 +301,7 @@ function LandingPage(): ReactElement {
                   href="#services"
                 >
                   <span className="material-symbols-outlined">play_circle</span>
-                  소개 영상 보기
+                  {data.hero.cta.secondary}
                 </a>
               </div>
             </div>
@@ -513,44 +513,53 @@ function LandingPage(): ReactElement {
                 </span>
               </div>
               <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-6 leading-tight reveal-text">
-                복잡한 세무 사례,
-                <br />단 <span className="text-ai-green">3단계</span>로
-                해결하세요
+                {data.services.process.title.line1}
+                <br />
+                {data.services.process.title.line2}
+                <span className="text-ai-green">
+                  {data.services.process.title.highlight}
+                </span>
+                {data.services.process.title.line3}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg mb-10 keep-all">
-                법전을 뒤적이기 전에 AI에게 먼저 물어보세요. 수만 페이지의
-                문서를 단 몇 초 만에 읽고 분석하는 유능한 주니어 어소시에이트를
-                고용하는 것과 같습니다.
+                {data.services.process.description}
               </p>
 
               <ul className="space-y-6">
-                <li className="flex items-center gap-6 p-4 rounded-xl bg-surface-light dark:bg-background-dark border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                  <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold text-lg">
-                    1
-                  </span>
-                  <span className="font-bold text-lg text-gray-800 dark:text-gray-200">
-                    사례 파일 업로드 (PDF/Doc)
-                  </span>
-                </li>
-                <li className="flex items-center gap-6 p-4 rounded-xl bg-primary shadow-xl transform translate-x-4">
-                  <span className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold text-lg">
-                    2
-                  </span>
-                  <span className="font-bold text-lg text-black">
-                    분석 보고서 생성
-                  </span>
-                  <span className="ml-auto material-symbols-outlined text-black">
-                    arrow_forward
-                  </span>
-                </li>
-                <li className="flex items-center gap-6 p-4 rounded-xl bg-surface-light dark:bg-background-dark border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                  <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold text-lg">
-                    3
-                  </span>
-                  <span className="font-bold text-lg text-gray-800 dark:text-gray-200">
-                    검토 및 메모로 내보내기
-                  </span>
-                </li>
+                {data.services.process.steps.map((step, index) => (
+                  <li
+                    key={index}
+                    className={`flex items-center gap-6 p-4 rounded-xl ${
+                      index === 1
+                        ? 'bg-primary shadow-xl transform translate-x-4'
+                        : 'bg-surface-light dark:bg-background-dark border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition'
+                    }`}
+                  >
+                    <span
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+                        index === 1
+                          ? 'bg-white text-black'
+                          : 'bg-black text-white'
+                      }`}
+                    >
+                      {index + 1}
+                    </span>
+                    <span
+                      className={`font-bold text-lg ${
+                        index === 1
+                          ? 'text-black'
+                          : 'text-gray-800 dark:text-gray-200'
+                      }`}
+                    >
+                      {step}
+                    </span>
+                    {index === 1 && (
+                      <span className="ml-auto material-symbols-outlined text-black">
+                        arrow_forward
+                      </span>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -559,66 +568,34 @@ function LandingPage(): ReactElement {
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2">
               <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-6 leading-tight reveal-text">
-                전문가를 위한
+                {data.services.accuracy.title.line1}
                 <br />
-                <span className="text-ai-blue">압도적 정확성</span>
+                <span className="text-ai-blue">
+                  {data.services.accuracy.title.highlight}
+                </span>
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg mb-10 keep-all">
-                중요한 의사결정 과정에 통합되기 위해 투명성과 해석 가능성은
-                필수입니다. TaxAI는 모든 주장에 대해 명확한 출처를 제공합니다.
+                {data.services.accuracy.description}
               </p>
 
               <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
-                      check_circle
-                    </span>
+                {data.services.accuracy.features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
+                      <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
+                        {feature.icon}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
+                        {feature.title}
+                      </h4>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-                      할루시네이션 제로 정책
-                    </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      엄격한 제약 조건을 통해 제공된 법령 텍스트 내에서만 답변을
-                      생성합니다.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
-                      lock
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-                      데이터 보안 보장
-                    </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      민감한 클라이언트 데이터를 위한 온프레미스 구축 옵션을
-                      지원합니다.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
-                      history_edu
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-                      감사 추적 (Audit Trail)
-                    </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      세무 조언 도출에 사용된 논리와 근거를 투명하게 추적할 수
-                      있습니다.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -635,7 +612,7 @@ function LandingPage(): ReactElement {
                       <span className="material-symbols-outlined animate-spin">
                         sync
                       </span>
-                      Processing...
+                      {data.services.accuracy.processing}
                     </span>
                   </div>
                   <div className="col-span-2 h-32 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
@@ -677,13 +654,7 @@ function LandingPage(): ReactElement {
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
 
           {/* Scrolling Track */}
-          <div
-            className="flex gap-6 hover:[animation-play-state:paused]"
-            style={{
-              animation: 'scrollLeft 30s linear infinite',
-              width: 'max-content',
-            }}
-          >
+          <div className="flex gap-6 scroll-track">
             {/* Original Cards + Duplicates for seamless loop */}
             {[...Array(2)].map((_, setIndex) => (
               <div key={setIndex} className="flex gap-6">
@@ -779,22 +750,25 @@ function LandingPage(): ReactElement {
       <section className="py-24 bg-yellow-50 dark:bg-yellow-900/10 border-y border-yellow-100 dark:border-yellow-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-display font-extrabold text-3xl md:text-5xl text-gray-900 dark:text-white mb-6 leading-tight reveal-text">
-            나만의 <span className="text-ai-blue">AI 세무 비서</span>를
+            {data.navigation.cta.title.line1}
+            <span className="text-ai-blue">
+              {data.navigation.cta.title.highlight}
+            </span>
+            {data.navigation.cta.title.line2}
             <br />
-            만날 준비가 되셨나요?
+            {data.navigation.cta.title.line3}
           </h2>
           <p className="text-gray-600 dark:text-gray-300 text-lg mb-12">
-            이미 500개 이상의 회계법인이 TaxAI를 통해 업무 효율을 극대화하고
-            있습니다.
+            {data.navigation.cta.description}
           </p>
 
           <div className="bg-primary rounded-2xl p-8 md:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group">
             <div className="relative z-10 text-left">
               <h3 className="font-bold text-2xl text-black mb-2">
-                엔터프라이즈 플랜
+                {data.navigation.cta.enterprise.title}
               </h3>
               <p className="text-black/80 font-medium">
-                맞춤형 LLM 학습 & 온프레미스 구축 지원
+                {data.navigation.cta.enterprise.description}
               </p>
             </div>
             <div className="relative z-10 w-full md:w-auto">
@@ -802,7 +776,7 @@ function LandingPage(): ReactElement {
                 className="block text-center bg-black hover:bg-gray-800 text-white font-bold py-4 px-10 rounded-xl transition border border-transparent hover:border-gray-600 shadow-lg"
                 href="#contact"
               >
-                영업팀 문의하기
+                {data.navigation.cta.enterprise.button}
               </a>
             </div>
             <div className="absolute -right-6 -bottom-6 opacity-10 pointer-events-none transform group-hover:scale-110 transition duration-700">
@@ -818,7 +792,8 @@ function LandingPage(): ReactElement {
       <section className="py-24 bg-surface-light dark:bg-background-dark">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display font-extrabold text-3xl text-center text-gray-900 dark:text-white mb-16 reveal-text">
-            {data.faq.title}
+            {data.faq.title.text}
+            <span className="text-ai-green">{data.faq.title.highlight}</span>
           </h2>
 
           <div className="space-y-4">
@@ -849,9 +824,9 @@ function LandingPage(): ReactElement {
       {/* Contact Section */}
       <section className="bg-hero-dark text-white py-20" id="contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="grid lg:grid-cols-2 gap-12 items-stretch">
             {/* Left - Header & Company Info & Map */}
-            <div>
+            <div className="flex flex-col">
               {/* Section Header */}
               <div className="mb-10">
                 <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
@@ -915,8 +890,8 @@ function LandingPage(): ReactElement {
                 </div>
 
                 {/* Map Placeholder - Google Map will be integrated */}
-                <div className="mt-8">
-                  <div className="bg-gray-800 rounded-2xl overflow-hidden h-[250px] relative">
+                <div className="mt-8 flex-1 flex flex-col">
+                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[200px] relative">
                     {/* Google Map iframe - Uses embed (no API key required) */}
                     {/* For JavaScript API, use: import.meta.env.VITE_GOOGLE_MAPS_API_KEY */}
                     <iframe
@@ -950,8 +925,8 @@ function LandingPage(): ReactElement {
             </div>
 
             {/* Right - Contact Form */}
-            <div className="bg-background-dark p-8 rounded-2xl border border-gray-800">
-              <form className="space-y-5">
+            <div className="bg-background-dark p-8 rounded-2xl border border-gray-800 flex flex-col">
+              <form className="space-y-5 flex flex-col flex-1">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-400 text-sm mb-2">
@@ -999,14 +974,13 @@ function LandingPage(): ReactElement {
                   </select>
                 </div>
 
-                <div>
+                <div className="flex-1 flex flex-col">
                   <label className="block text-gray-400 text-sm mb-2">
                     {data.contact.form.message}
                   </label>
                   <textarea
-                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
+                    className="w-full flex-1 min-h-[100px] bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
                     placeholder={data.contact.form.messagePlaceholder}
-                    rows={4}
                   ></textarea>
                 </div>
 

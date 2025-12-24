@@ -1,6 +1,9 @@
 {
   "ko": {
-    "title": "자주 묻는 질문",
+    "title": {
+      "text": "자주 묻는 ",
+      "highlight": "질문"
+    },
     "items": [
       {
         "question": "고객 프로젝트에 TaxAI를 사용할 수 있나요?",
@@ -17,7 +20,10 @@
     ]
   },
   "en": {
-    "title": "Frequently Asked Questions",
+    "title": {
+      "text": "Frequently Asked ",
+      "highlight": "Questions"
+    },
     "items": [
       {
         "question": "Can I use TaxAI for client projects?",

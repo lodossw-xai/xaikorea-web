@@ -123,6 +123,16 @@
   }
 }
 
+/* Pause scrolling animation on hover */
+.scroll-track {
+  animation: scrollLeft 30s linear infinite;
+  width: max-content;
+}
+
+.scroll-track:hover {
+  animation-play-state: paused;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

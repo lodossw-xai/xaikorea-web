@@ -13,6 +13,20 @@
     "darkMode": {
       "light": "라이트 모드로 전환",
       "dark": "다크 모드로 전환"
+    },
+    "cta": {
+      "title": {
+        "line1": "나만의 ",
+        "highlight": "AI 세무 비서",
+        "line2": "를",
+        "line3": "만날 준비가 되셨나요?"
+      },
+      "description": "이미 500개 이상의 회계법인이 TaxAI를 통해 업무 효율을 극대화하고 있습니다.",
+      "enterprise": {
+        "title": "엔터프라이즈 플랜",
+        "description": "맞춤형 LLM 학습 & 온프레미스 구축 지원",
+        "button": "영업팀 문의하기"
+      }
     }
   },
   "en": {
@@ -29,6 +43,20 @@
     "darkMode": {
       "light": "Switch to light mode",
       "dark": "Switch to dark mode"
+    },
+    "cta": {
+      "title": {
+        "line1": "Ready to Meet Your ",
+        "highlight": "AI Tax Assistant",
+        "line2": "?",
+        "line3": ""
+      },
+      "description": "Over 500 accounting firms are already maximizing their efficiency with TaxAI.",
+      "enterprise": {
+        "title": "Enterprise Plan",
+        "description": "Custom LLM Training & On-premise Deployment",
+        "button": "Contact Sales"
+      }
     }
   }
 }

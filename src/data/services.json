@@ -27,23 +27,43 @@
       }
     ],
     "process": {
-      "icon": "psychology",
-      "title": "복잡한 세무 사례,<br/>단 <highlight>3단계</highlight>로 해결하세요",
+      "title": {
+        "line1": "복잡한 세무 사례,",
+        "line2": "단 ",
+        "highlight": "3단계",
+        "line3": "로 해결하세요"
+      },
       "description": "법전을 뒤적이기 전에 AI에게 먼저 물어보세요. 수만 페이지의 문서를 단 몇 초 만에 읽고 분석하는 유능한 주니어 어소시에이트를 고용하는 것과 같습니다.",
       "steps": [
         "사례 파일 업로드 (PDF/Doc)",
-        "AI가 관련 법령 분석",
-        "자문 의견서 초안 수령"
+        "분석 보고서 생성",
+        "검토 및 메모로 내보내기"
       ]
     },
     "accuracy": {
-      "title": "AI 정확도<br/><highlight>98.7%</highlight>의 비밀",
-      "description": "국세법령정보시스템(NLIS), 대법원 판례 DB, 조세심판원 결정례 등<br/>방대한 공신력 있는 데이터를 바탕으로 학습했습니다.",
-      "stats": [
-        { "value": "50만+", "label": "법령 조항" },
-        { "value": "30만+", "label": "판례/예규" },
-        { "value": "98.7%", "label": "검증 정확도" }
-      ]
+      "title": {
+        "line1": "전문가를 위한",
+        "highlight": "압도적 정확성"
+      },
+      "description": "중요한 의사결정 과정에 통합되기 위해 투명성과 해석 가능성은 필수입니다. TaxAI는 모든 주장에 대해 명확한 출처를 제공합니다.",
+      "features": [
+        {
+          "icon": "check_circle",
+          "title": "할루시네이션 제로 정책",
+          "description": "엄격한 제약 조건을 통해 제공된 법령 텍스트 내에서만 답변을 생성합니다."
+        },
+        {
+          "icon": "lock",
+          "title": "데이터 보안 보장",
+          "description": "민감한 클라이언트 데이터를 위한 온프레미스 구축 옵션을 지원합니다."
+        },
+        {
+          "icon": "history_edu",
+          "title": "감사 추적 (Audit Trail)",
+          "description": "세무 조언 도출에 사용된 논리와 근거를 투명하게 추적할 수 있습니다."
+        }
+      ],
+      "processing": "처리 중..."
     }
   },
   "en": {
@@ -74,23 +94,43 @@
       }
     ],
     "process": {
-      "icon": "psychology",
-      "title": "Complex Tax Cases,<br/>Solved in <highlight>3 Steps</highlight>",
+      "title": {
+        "line1": "Complex Tax Cases,",
+        "line2": "Solved in ",
+        "highlight": "3 Steps",
+        "line3": ""
+      },
       "description": "Ask AI before flipping through law books. It's like hiring a capable junior associate who reads and analyzes tens of thousands of pages in seconds.",
       "steps": [
         "Upload Case File (PDF/Doc)",
-        "AI Analyzes Relevant Laws",
-        "Receive Advisory Draft"
+        "Generate Analysis Report",
+        "Review & Export as Notes"
       ]
     },
     "accuracy": {
-      "title": "The Secret of<br/><highlight>98.7%</highlight> AI Accuracy",
-      "description": "Trained on vast authoritative data including NLIS, Supreme Court precedents,<br/>and Tax Tribunal decisions.",
-      "stats": [
-        { "value": "500K+", "label": "Legal Provisions" },
-        { "value": "300K+", "label": "Precedents/Rulings" },
-        { "value": "98.7%", "label": "Verified Accuracy" }
-      ]
+      "title": {
+        "line1": "For Professionals,",
+        "highlight": "Overwhelming Accuracy"
+      },
+      "description": "Transparency and interpretability are essential for integration into important decision-making processes. TaxAI provides clear sources for all claims.",
+      "features": [
+        {
+          "icon": "check_circle",
+          "title": "Zero Hallucination Policy",
+          "description": "Generates answers only within the provided legal text through strict constraints."
+        },
+        {
+          "icon": "lock",
+          "title": "Data Security Guaranteed",
+          "description": "Supports on-premise deployment options for sensitive client data."
+        },
+        {
+          "icon": "history_edu",
+          "title": "Audit Trail",
+          "description": "Transparently track the logic and grounds used to derive tax advice."
+        }
+      ],
+      "processing": "Processing..."
     }
   }
 }
