@@ -837,99 +837,89 @@ function LandingPage(): ReactElement {
       </section>
 
       {/* Team Section */}
-      <section className="py-24 bg-white dark:bg-background-dark" id="team">
+      <section
+        className="py-24 bg-surface-light dark:bg-background-dark"
+        id="team"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div>
-              <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-3 reveal-text">
-                <span className="text-ai-blue">팀 소개</span>
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
-                AI 전문가와 세무 전문가가 함께 만듭니다.
-              </p>
-            </div>
-            <a
-              className="hidden md:flex items-center text-primary font-bold hover:underline group"
-              href="#contact"
-            >
-              인재 채용{' '}
-              <span className="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition">
-                arrow_forward
-              </span>
-            </a>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <span className="text-ai-blue text-sm font-bold tracking-widest uppercase mb-4 block">
+              OUR TEAM
+            </span>
+            <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">
+              최고의 전문가들이 함께합니다
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+              AI 엔지니어와 CPA/세무사가 하나의 팀으로 움직입니다.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-            {/* Team Member 1 */}
-            <div className="text-center group">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Team Member 1 - CEO */}
+            <div className="bg-white dark:bg-surface-dark rounded-2xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300">
               <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-primary rounded-2xl rotate-6 group-hover:rotate-12 transition duration-300"></div>
                 <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
+                  alt="이동석"
+                  className="w-32 h-32 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500 border-4 border-gray-100 dark:border-gray-700"
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop"
                 />
               </div>
               <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                최민준
+                이동석
               </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                CEO / Founder
+              <p className="text-ai-blue text-sm font-semibold uppercase tracking-wide mb-4">
+                CEO / FOUNDER
               </p>
-            </div>
-
-            {/* Team Member 2 */}
-            <div className="text-center group">
-              <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-2xl -rotate-3 group-hover:-rotate-6 transition duration-300"></div>
-                <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
-                />
+              <div className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed space-y-1">
+                <p>서울대 컴퓨터공학 박사</p>
+                <p>前 네이버, 카카오 AI Lab 리드</p>
+                <p>대규모 언어모델 최적화 전문가</p>
               </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                송지은
-              </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                CTO
-              </p>
             </div>
 
-            {/* Team Member 3 */}
-            <div className="text-center group">
+            {/* Team Member 2 - CTO */}
+            <div className="bg-white dark:bg-surface-dark rounded-2xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300">
               <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-2xl rotate-3 group-hover:rotate-6 transition duration-300"></div>
                 <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
+                  alt="김재환"
+                  className="w-32 h-32 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500 border-4 border-gray-100 dark:border-gray-700"
                   src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop"
                 />
               </div>
               <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                알렉스 첸
+                김재환
               </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Head of AI
+              <p className="text-ai-blue text-sm font-semibold uppercase tracking-wide mb-4">
+                CTO / AI RESEARCH
               </p>
+              <div className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed space-y-1">
+                <p>KAIST AI 대학원 석사</p>
+                <p>자연어 처리(NLP) 및 RAG 시스템 아키텍처</p>
+                <p>데이터 신뢰성 알고리즘 총괄</p>
+              </div>
             </div>
 
-            {/* Team Member 4 */}
-            <div className="text-center group">
+            {/* Team Member 3 - CFO */}
+            <div className="bg-white dark:bg-surface-dark rounded-2xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300">
               <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-2xl -rotate-6 group-hover:-rotate-12 transition duration-300"></div>
                 <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop"
+                  alt="김정인"
+                  className="w-32 h-32 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500 border-4 border-gray-100 dark:border-gray-700"
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
                 />
               </div>
               <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                김하나
+                김정인
               </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Lead CPA
+              <p className="text-ai-blue text-sm font-semibold uppercase tracking-wide mb-4">
+                CFO / CPA
               </p>
+              <div className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed space-y-1">
+                <p>KICPA 공인회계사</p>
+                <p>前 삼일회계법인, 딜로이트 안진</p>
+                <p>실무 중심 서비스 기획 및 자문 총괄</p>
+              </div>
             </div>
           </div>
         </div>
