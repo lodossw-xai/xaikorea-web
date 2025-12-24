@@ -42,3 +42,10 @@ dist
 
 # OS
 Thumbs.db
+.claude
+.playwrite-mcp
+.spcify
+.vscode
+docs/
+.specify
+.playwright-mcp
