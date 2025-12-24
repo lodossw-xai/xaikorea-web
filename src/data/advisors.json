@@ -1,0 +1,88 @@
+{
+  "ko": {
+    "title": {
+      "highlight": "최고의 전문가",
+      "main": "들과 함께합니다"
+    },
+    "items": [
+      {
+        "name": "제임스 김",
+        "role": "전 국세청 국장",
+        "quote": "국제 조세 조약과 국내법을 즉시 교차 검증할 수 있는 기능은 국경 간 컨설팅 업무의 게임 체인저입니다.",
+        "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop",
+        "isHead": false
+      },
+      {
+        "name": "사라 이",
+        "role": "Big 4 파트너 회계사",
+        "quote": "TaxAI 도입 후 사전 리서치 시간이 70% 단축되었습니다. 주니어 회계사들이 단순 반복 작업 대신 전략 수립에 집중할 수 있게 되었습니다.",
+        "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop",
+        "isHead": true
+      },
+      {
+        "name": "데이비드 박",
+        "role": "세법학 교수",
+        "quote": "우리 분야에서 정확성은 생명입니다. 모든 답변에 명확한 인용 출처가 제공되니 안심하고 자문에 활용할 수 있습니다.",
+        "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
+        "isHead": false
+      },
+      {
+        "name": "마이클 정",
+        "role": "국제 조세 전문 변호사",
+        "quote": "복잡한 세무 쟁점에 대한 AI의 분석력이 인상적입니다. 클라이언트에게 더 빠르고 정확한 조언을 제공할 수 있게 되었습니다.",
+        "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop",
+        "isHead": false
+      },
+      {
+        "name": "수진 최",
+        "role": "공인회계사",
+        "quote": "스타트업부터 대기업까지, 다양한 규모의 기업에 맞춤형 세무 솔루션을 제공할 수 있어 업무 효율이 크게 향상되었습니다.",
+        "image": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop",
+        "isHead": false
+      }
+    ]
+  },
+  "en": {
+    "title": {
+      "highlight": "Top Experts",
+      "main": " Work With Us"
+    },
+    "items": [
+      {
+        "name": "James Kim",
+        "role": "Former NTS Director",
+        "quote": "The ability to instantly cross-verify international tax treaties and domestic laws is a game changer for cross-border consulting.",
+        "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop",
+        "isHead": false
+      },
+      {
+        "name": "Sarah Lee",
+        "role": "Big 4 Partner CPA",
+        "quote": "After implementing TaxAI, preliminary research time was reduced by 70%. Junior accountants can now focus on strategy instead of repetitive tasks.",
+        "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop",
+        "isHead": true
+      },
+      {
+        "name": "David Park",
+        "role": "Tax Law Professor",
+        "quote": "In our field, accuracy is everything. I can confidently use the advice knowing every answer comes with clear citation sources.",
+        "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
+        "isHead": false
+      },
+      {
+        "name": "Michael Jung",
+        "role": "International Tax Attorney",
+        "quote": "The AI's analytical power on complex tax issues is impressive. I can now provide faster and more accurate advice to clients.",
+        "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop",
+        "isHead": false
+      },
+      {
+        "name": "Sujin Choi",
+        "role": "Certified Public Accountant",
+        "quote": "From startups to enterprises, being able to provide customized tax solutions for various sizes has greatly improved work efficiency.",
+        "image": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop",
+        "isHead": false
+      }
+    ]
+  }
+}

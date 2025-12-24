@@ -1,0 +1,96 @@
+{
+  "ko": {
+    "title": {
+      "highlight": "RAG AI",
+      "main": "를 활용한<br/>정밀 세무 의견서 작성"
+    },
+    "description": "수천 페이지의 문서를 검색하는 수고를 덜어드립니다. AI가 필요한 조항과 판례를 즉시 찾아내어 전문가의 업무를 가속화합니다.",
+    "cards": [
+      {
+        "icon": "manage_search",
+        "title": "맥락 기반 검색",
+        "description": "단순 키워드가 아닌 세법의 맥락을 이해합니다. 모호한 질의에도 관련된 법령과 예규를 정확하게 찾아 매칭합니다.",
+        "isPopular": false
+      },
+      {
+        "icon": "auto_fix_high",
+        "title": "초안 자동 생성",
+        "description": "검색된 법령을 기반으로 고객 자문서 초안을 자동으로 작성합니다. 고품질 초안 작성으로 업무 시간을 90% 단축하세요.",
+        "isPopular": true,
+        "badge": "POPULAR"
+      },
+      {
+        "icon": "update",
+        "title": "실시간 법령 업데이트",
+        "description": "매일 변경되는 세법과 예규를 실시간으로 학습합니다. 절대 뒤처지지 않는 최신 법령 정보를 보장합니다.",
+        "isPopular": false
+      }
+    ],
+    "process": {
+      "icon": "psychology",
+      "title": "복잡한 세무 사례,<br/>단 <highlight>3단계</highlight>로 해결하세요",
+      "description": "법전을 뒤적이기 전에 AI에게 먼저 물어보세요. 수만 페이지의 문서를 단 몇 초 만에 읽고 분석하는 유능한 주니어 어소시에이트를 고용하는 것과 같습니다.",
+      "steps": [
+        "사례 파일 업로드 (PDF/Doc)",
+        "AI가 관련 법령 분석",
+        "자문 의견서 초안 수령"
+      ]
+    },
+    "accuracy": {
+      "title": "AI 정확도<br/><highlight>98.7%</highlight>의 비밀",
+      "description": "국세법령정보시스템(NLIS), 대법원 판례 DB, 조세심판원 결정례 등<br/>방대한 공신력 있는 데이터를 바탕으로 학습했습니다.",
+      "stats": [
+        { "value": "50만+", "label": "법령 조항" },
+        { "value": "30만+", "label": "판례/예규" },
+        { "value": "98.7%", "label": "검증 정확도" }
+      ]
+    }
+  },
+  "en": {
+    "title": {
+      "highlight": "RAG AI",
+      "main": "-Powered<br/>Precision Tax Opinions"
+    },
+    "description": "Save hours of searching through thousands of pages. AI instantly finds the relevant provisions and precedents to accelerate expert work.",
+    "cards": [
+      {
+        "icon": "manage_search",
+        "title": "Context-Based Search",
+        "description": "Understands tax law context, not just keywords. Accurately matches relevant statutes and rulings even for ambiguous queries.",
+        "isPopular": false
+      },
+      {
+        "icon": "auto_fix_high",
+        "title": "Auto Draft Generation",
+        "description": "Automatically creates client advisory drafts based on searched regulations. Reduce work time by 90% with high-quality drafts.",
+        "isPopular": true,
+        "badge": "POPULAR"
+      },
+      {
+        "icon": "update",
+        "title": "Real-time Law Updates",
+        "description": "Learns daily changes in tax laws and rulings in real-time. Guaranteed up-to-date legal information.",
+        "isPopular": false
+      }
+    ],
+    "process": {
+      "icon": "psychology",
+      "title": "Complex Tax Cases,<br/>Solved in <highlight>3 Steps</highlight>",
+      "description": "Ask AI before flipping through law books. It's like hiring a capable junior associate who reads and analyzes tens of thousands of pages in seconds.",
+      "steps": [
+        "Upload Case File (PDF/Doc)",
+        "AI Analyzes Relevant Laws",
+        "Receive Advisory Draft"
+      ]
+    },
+    "accuracy": {
+      "title": "The Secret of<br/><highlight>98.7%</highlight> AI Accuracy",
+      "description": "Trained on vast authoritative data including NLIS, Supreme Court precedents,<br/>and Tax Tribunal decisions.",
+      "stats": [
+        { "value": "500K+", "label": "Legal Provisions" },
+        { "value": "300K+", "label": "Precedents/Rulings" },
+        { "value": "98.7%", "label": "Verified Accuracy" }
+      ]
+    }
+  }
+}

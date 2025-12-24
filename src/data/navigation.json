@@ -1,0 +1,34 @@
+{
+  "ko": {
+    "nav": {
+      "home": "홈",
+      "services": "서비스",
+      "advisors": "자문단",
+      "team": "팀 소개",
+      "contact": "문의하기"
+    },
+    "logo": {
+      "name": "TaxAI"
+    },
+    "darkMode": {
+      "light": "라이트 모드로 전환",
+      "dark": "다크 모드로 전환"
+    }
+  },
+  "en": {
+    "nav": {
+      "home": "Home",
+      "services": "Services",
+      "advisors": "Advisors",
+      "team": "Team",
+      "contact": "Contact"
+    },
+    "logo": {
+      "name": "TaxAI"
+    },
+    "darkMode": {
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    }
+  }
+}

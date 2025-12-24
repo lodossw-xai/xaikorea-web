@@ -1,0 +1,36 @@
+{
+  "ko": {
+    "title": "자주 묻는 질문",
+    "items": [
+      {
+        "question": "고객 프로젝트에 TaxAI를 사용할 수 있나요?",
+        "answer": "네, TaxAI는 회계법인, 세무법인, 기업 내부 세무팀 등 다양한 환경에서 활용 가능합니다. 엔터프라이즈 플랜을 통해 팀 전체가 사용할 수 있습니다."
+      },
+      {
+        "question": "데이터는 안전한가요?",
+        "answer": "모든 데이터는 엔터프라이즈급 암호화로 보호됩니다. ISO 27001 인증을 획득했으며, 고객 데이터는 학습에 사용되지 않습니다."
+      },
+      {
+        "question": "지원되는 국가 및 법령은 어디인가요?",
+        "answer": "현재 한국 세법(국세기본법, 소득세법, 법인세법, 부가가치세법 등)을 주로 지원하며, 미국, 일본 법령도 순차적으로 확대 중입니다."
+      }
+    ]
+  },
+  "en": {
+    "title": "Frequently Asked Questions",
+    "items": [
+      {
+        "question": "Can I use TaxAI for client projects?",
+        "answer": "Yes, TaxAI can be used in various environments including accounting firms, tax firms, and corporate tax teams. Enterprise plans allow your entire team to use it."
+      },
+      {
+        "question": "Is my data secure?",
+        "answer": "All data is protected with enterprise-grade encryption. We are ISO 27001 certified, and customer data is never used for training."
+      },
+      {
+        "question": "Which countries and regulations are supported?",
+        "answer": "Currently, we mainly support Korean tax laws (National Tax Basic Act, Income Tax Act, Corporate Tax Act, VAT Act, etc.), with US and Japanese laws being added progressively."
+      }
+    ]
+  }
+}

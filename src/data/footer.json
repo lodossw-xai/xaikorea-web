@@ -1,0 +1,86 @@
+{
+  "ko": {
+    "logo": {
+      "name": "XAI",
+      "highlight": "KOREA"
+    },
+    "tagline": "AI Innovation for\nTax & Accounting Professionals.",
+    "social": {
+      "facebook": "f",
+      "linkedin": "in",
+      "twitter": "X"
+    },
+    "menus": {
+      "company": {
+        "title": "Company",
+        "items": [
+          { "label": "회사소개", "href": "#" },
+          { "label": "팀 소개", "href": "#team" },
+          { "label": "채용 정보", "href": "#" },
+          { "label": "오시는 길", "href": "#contact" }
+        ]
+      },
+      "solution": {
+        "title": "Solution",
+        "items": [
+          { "label": "XAI Tax", "href": "#services" },
+          { "label": "XAI Audit", "href": "#services" },
+          { "label": "API Service", "href": "#" },
+          { "label": "연동 사례", "href": "#" }
+        ]
+      },
+      "legal": {
+        "title": "Legal",
+        "items": [
+          { "label": "서비스 이용약관", "href": "#" },
+          { "label": "개인정보 처리방침", "href": "#" },
+          { "label": "보안 정책", "href": "#" }
+        ]
+      }
+    },
+    "copyright": "© 2024 XAI KOREA Inc. All rights reserved.",
+    "businessInfo": "사업자등록번호 123-45-67890 | 서울특별시 강남구 테헤란로 123"
+  },
+  "en": {
+    "logo": {
+      "name": "XAI",
+      "highlight": "KOREA"
+    },
+    "tagline": "AI Innovation for\nTax & Accounting Professionals.",
+    "social": {
+      "facebook": "f",
+      "linkedin": "in",
+      "twitter": "X"
+    },
+    "menus": {
+      "company": {
+        "title": "Company",
+        "items": [
+          { "label": "About Us", "href": "#" },
+          { "label": "Team", "href": "#team" },
+          { "label": "Careers", "href": "#" },
+          { "label": "Directions", "href": "#contact" }
+        ]
+      },
+      "solution": {
+        "title": "Solution",
+        "items": [
+          { "label": "XAI Tax", "href": "#services" },
+          { "label": "XAI Audit", "href": "#services" },
+          { "label": "API Service", "href": "#" },
+          { "label": "Integrations", "href": "#" }
+        ]
+      },
+      "legal": {
+        "title": "Legal",
+        "items": [
+          { "label": "Terms of Service", "href": "#" },
+          { "label": "Privacy Policy", "href": "#" },
+          { "label": "Security Policy", "href": "#" }
+        ]
+      }
+    },
+    "copyright": "© 2024 XAI KOREA Inc. All rights reserved.",
+    "businessInfo": "Business Registration No. 123-45-67890 | 123 Teheran-ro, Gangnam-gu, Seoul"
+  }
+}
