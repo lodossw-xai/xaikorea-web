@@ -44,8 +44,8 @@ dist
 Thumbs.db
 .claude
 .playwrite-mcp
-.spcify
 .vscode
-docs/
+public_html
+.antigravity
 .specify
 .playwright-mcp

@@ -29,7 +29,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: 'public_html',
+    outDir: 'docs',
     sourcemap: true,
     rollupOptions: {
       output: {

@@ -6,7 +6,7 @@
   "homepage": "https://github.com/lodossw-xai/xaikorea-web",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && cp public_html/index.html public_html/404.html && touch public_html/.nojekyll",
+    "build": "tsc -b && vite build && cp docs/index.html docs/404.html && touch docs/.nojekyll",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
