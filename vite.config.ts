@@ -1,13 +1,16 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { defineConfig } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
+  // GitHub Pages 배포 시 경로 설정
+  // 개발: '/' / 프로덕션: '/xaikorea-web/'
+  base: '/xaikorea-web/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -26,7 +29,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: 'dist',
+    outDir: 'public_html',
     sourcemap: true,
     rollupOptions: {
       output: {
