@@ -667,98 +667,171 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* Advisors Section */}
+      {/* Advisors Section - Rolling Banner */}
       <section
-        className="py-24 bg-surface-light dark:bg-background-dark border-y border-gray-200 dark:border-gray-800"
+        className="py-24 bg-surface-light dark:bg-background-dark border-y border-gray-200 dark:border-gray-800 overflow-hidden"
         id="advisors"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-16 reveal-text">
             <span className="text-ai-blue">최고의 전문가</span>들과 함께합니다
           </h2>
+        </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Advisor 1 */}
-            <div className="bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
-              <div className="text-primary text-6xl mb-2 font-serif opacity-50">
-                "
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-8 italic relative z-10 keep-all">
-                "국제 조세 조약과 국내법을 즉시 교차 검증할 수 있는 기능은 국경
-                간 컨설팅 업무의 게임 체인저입니다."
-              </p>
-              <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-6">
-                <img
-                  alt="Advisor"
-                  className="w-14 h-14 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop"
-                />
-                <div>
-                  <h4 className="font-bold text-lg text-gray-900 dark:text-white">
-                    제임스 김
-                  </h4>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                    전 국세청 국장
+        {/* Rolling Banner Container */}
+        <div className="relative">
+          {/* Gradient Overlay - Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient Overlay - Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+
+          {/* Scrolling Track */}
+          <div
+            className="flex gap-6 hover:[animation-play-state:paused]"
+            style={{
+              animation: 'scrollLeft 30s linear infinite',
+              width: 'max-content',
+            }}
+          >
+            {/* Original Cards + Duplicates for seamless loop */}
+            {[...Array(2)].map((_, setIndex) => (
+              <div key={setIndex} className="flex gap-6">
+                {/* Advisor 1 */}
+                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
+                    "
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
+                    "국제 조세 조약과 국내법을 즉시 교차 검증할 수 있는 기능은
+                    국경 간 컨설팅 업무의 게임 체인저입니다."
                   </p>
+                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <img
+                      alt="Advisor"
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
+                      src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900 dark:text-white">
+                        제임스 김
+                      </h4>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                        전 국세청 국장
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Advisor 2 - Head Advisor */}
+                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative">
+                  <div className="absolute -top-3 right-8 bg-black text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">
+                    HEAD ADVISOR
+                  </div>
+                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
+                    "
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
+                    "TaxAI 도입 후 사전 리서치 시간이 70% 단축되었습니다. 주니어
+                    회계사들이 단순 반복 작업 대신 전략 수립에 집중할 수 있게
+                    되었습니다."
+                  </p>
+                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <img
+                      alt="Advisor"
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
+                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900 dark:text-white">
+                        사라 이
+                      </h4>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                        Big 4 파트너 회계사
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Advisor 3 */}
+                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
+                    "
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
+                    "우리 분야에서 정확성은 생명입니다. 모든 답변에 명확한 인용
+                    출처가 제공되니 안심하고 자문에 활용할 수 있습니다."
+                  </p>
+                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <img
+                      alt="Advisor"
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900 dark:text-white">
+                        데이비드 박
+                      </h4>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                        세법학 교수
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Advisor 4 - Additional */}
+                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
+                    "
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
+                    "복잡한 세무 쟁점에 대한 AI의 분석력이 인상적입니다.
+                    클라이언트에게 더 빠르고 정확한 조언을 제공할 수 있게
+                    되었습니다."
+                  </p>
+                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <img
+                      alt="Advisor"
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
+                      src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900 dark:text-white">
+                        마이클 정
+                      </h4>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                        국제 조세 전문 변호사
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Advisor 5 - Additional */}
+                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
+                    "
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
+                    "스타트업부터 대기업까지, 다양한 규모의 기업에 맞춤형 세무
+                    솔루션을 제공할 수 있어 업무 효율이 크게 향상되었습니다."
+                  </p>
+                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <img
+                      alt="Advisor"
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
+                      src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900 dark:text-white">
+                        수진 최
+                      </h4>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                        공인회계사
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Advisor 2 - Head Advisor */}
-            <div className="bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 relative transform md:-translate-y-4">
-              <div className="absolute -top-3 right-8 bg-black text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">
-                HEAD ADVISOR
-              </div>
-              <div className="text-primary text-6xl mb-2 font-serif opacity-50">
-                "
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-8 italic relative z-10 keep-all">
-                "TaxAI 도입 후 사전 리서치 시간이 70% 단축되었습니다. 주니어
-                회계사들이 단순 반복 작업 대신 전략 수립에 집중할 수 있게
-                되었습니다."
-              </p>
-              <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-6">
-                <img
-                  alt="Advisor"
-                  className="w-14 h-14 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop"
-                />
-                <div>
-                  <h4 className="font-bold text-lg text-gray-900 dark:text-white">
-                    사라 이
-                  </h4>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                    Big 4 파트너 회계사
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Advisor 3 */}
-            <div className="bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
-              <div className="text-primary text-6xl mb-2 font-serif opacity-50">
-                "
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-8 italic relative z-10 keep-all">
-                "우리 분야에서 정확성은 생명입니다. 모든 답변에 명확한 인용
-                출처가 제공되니 안심하고 자문에 활용할 수 있습니다."
-              </p>
-              <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-6">
-                <img
-                  alt="Advisor"
-                  className="w-14 h-14 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                />
-                <div>
-                  <h4 className="font-bold text-lg text-gray-900 dark:text-white">
-                    데이비드 박
-                  </h4>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                    세법학 교수
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -969,72 +1042,307 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-black text-white pt-24 pb-12" id="contact">
+      {/* Contact Section */}
+      <section className="bg-hero-dark text-white py-20" id="contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 mb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Left - Header & Company Info & Map */}
             <div>
-              <div className="flex items-center gap-2 mb-8">
-                <span className="material-symbols-outlined text-3xl text-primary">
-                  auto_graph
-                </span>
-                <span className="font-display font-bold text-2xl tracking-tight">
-                  Tax<span className="text-primary">AI</span>
-                </span>
+              {/* Section Header */}
+              <div className="mb-10">
+                <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
+                  문의하기
+                </h2>
+                <p className="text-gray-400 max-w-xl">
+                  서비스 도입, 기술 제휴, 투자 관련 문의를 남겨주세요.
+                  <br />
+                  담당자가 확인 후 24시간 이내에 답변 드립니다.
+                </p>
               </div>
-              <p className="text-gray-400 mb-10 max-w-sm text-lg leading-relaxed">
-                차세대 AI 기술로 금융 전문가들의 업무 혁신을 돕습니다. <br />
-                서울 | 뉴욕 | 싱가포르
-              </p>
+
+              <div className="space-y-6">
+                {/* Address */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-primary text-xl">
+                      location_on
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">본사 위치</h4>
+                    <p className="text-gray-400 text-sm">
+                      서울특별시 강남구 테헤란로 123, 15층 XAI Tower
+                    </p>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-primary text-xl">
+                      call
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">고객센터</h4>
+                    <p className="text-gray-400 text-sm">
+                      02-1234-5678 (평일 09:00 - 18:00)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-primary text-xl">
+                      mail
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">이메일</h4>
+                    <p className="text-gray-400 text-sm">
+                      contact@xaikorea.com
+                    </p>
+                  </div>
+                </div>
+
+                {/* Map Placeholder - Google Map will be integrated */}
+                <div className="mt-8">
+                  <div className="bg-gray-800 rounded-2xl overflow-hidden h-[250px] relative">
+                    {/* Google Map iframe - Uses embed (no API key required) */}
+                    {/* For JavaScript API, use: import.meta.env.VITE_GOOGLE_MAPS_API_KEY */}
+                    <iframe
+                      src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8'}&q=서울특별시+강남구+테헤란로+123&zoom=15&language=ko`}
+                      width="100%"
+                      height="100%"
+                      style={{
+                        border: 0,
+                        filter: 'grayscale(100%) invert(92%) contrast(83%)',
+                      }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="XAI Korea Office Location"
+                    ></iframe>
+                    {/* Map overlay button */}
+                    <a
+                      href="https://maps.google.com/?q=서울특별시+강남구+테헤란로+123"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black transition"
+                    >
+                      <span className="material-symbols-outlined text-sm">
+                        map
+                      </span>
+                      지도 보기
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="bg-gray-900/50 p-8 rounded-3xl border border-gray-800">
-              <h3 className="font-bold text-2xl mb-6 flex items-center gap-2">
-                <span className="font-display font-extrabold text-white">
-                  문의하기
-                </span>{' '}
-                <span className="text-primary">.</span>
-              </h3>
-              <form className="space-y-4">
+            {/* Right - Contact Form */}
+            <div className="bg-background-dark p-8 rounded-2xl border border-gray-800">
+              <form className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-400 text-sm mb-2">
+                      이름
+                    </label>
+                    <input
+                      className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
+                      placeholder="홍길동"
+                      type="text"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-400 text-sm mb-2">
+                      회사명
+                    </label>
+                    <input
+                      className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
+                      placeholder="회사명 입력"
+                      type="text"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-gray-400 text-sm mb-2">
+                    이메일
+                  </label>
                   <input
-                    className="w-full bg-black border border-gray-700 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition"
-                    placeholder="이름"
-                    type="text"
-                  />
-                  <input
-                    className="w-full bg-black border border-gray-700 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition"
-                    placeholder="이메일"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
+                    placeholder="example@email.com"
                     type="email"
                   />
                 </div>
-                <textarea
-                  className="w-full bg-black border border-gray-700 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition resize-none"
-                  placeholder="어떤 점이 궁금하신가요?"
-                  rows={4}
-                ></textarea>
+
+                <div>
+                  <label className="block text-gray-400 text-sm mb-2">
+                    문의 유형
+                  </label>
+                  <select className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition appearance-none cursor-pointer">
+                    <option value="">서비스 도입 문의</option>
+                    <option value="demo">제품 데모 요청</option>
+                    <option value="pricing">가격 및 플랜 문의</option>
+                    <option value="partnership">파트너십 제안</option>
+                    <option value="other">기타 문의</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-gray-400 text-sm mb-2">
+                    내용
+                  </label>
+                  <textarea
+                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
+                    placeholder="문의하실 내용을 입력해주세요."
+                    rows={4}
+                  ></textarea>
+                </div>
+
                 <button
-                  className="w-full bg-primary hover:bg-primary-hover text-black font-bold py-4 rounded-xl transition shadow-lg shadow-yellow-500/20 text-lg"
+                  className="w-full bg-ai-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2"
                   type="submit"
                 >
-                  메시지 전송
+                  문의하기
+                  <span className="material-symbols-outlined text-sm">
+                    arrow_forward
+                  </span>
                 </button>
               </form>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-            <div className="mb-4 md:mb-0">
-              © 2024 TaxAI Solutions Inc. All rights reserved.
+      {/* Footer */}
+      <footer className="bg-hero-dark text-white pt-16 pb-8 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+            {/* Logo & Description */}
+            <div className="col-span-2 md:col-span-2">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="material-symbols-outlined text-2xl text-primary">
+                  auto_graph
+                </span>
+                <span className="font-display font-bold text-xl tracking-tight">
+                  XAI <span className="text-primary">KOREA</span>
+                </span>
+              </div>
+              <p className="text-gray-400 text-sm mb-6 max-w-xs leading-relaxed">
+                AI Innovation for
+                <br />
+                Tax & Accounting Professionals.
+              </p>
+              {/* Social Icons */}
+              <div className="flex gap-3">
+                <a
+                  href="#"
+                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
+                >
+                  <span className="text-gray-400 text-sm">f</span>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
+                >
+                  <span className="text-gray-400 text-sm">in</span>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
+                >
+                  <span className="text-gray-400 text-sm">X</span>
+                </a>
+              </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-8">
-              <a className="hover:text-white transition" href="#">
-                개인정보 처리방침
-              </a>
-              <a className="hover:text-white transition" href="#">
-                이용약관
-              </a>
+
+            {/* Company */}
+            <div>
+              <h4 className="font-bold text-white mb-4">Company</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    회사소개
+                  </a>
+                </li>
+                <li>
+                  <a href="#team" className="hover:text-white transition">
+                    팀 소개
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    채용 정보
+                  </a>
+                </li>
+                <li>
+                  <a href="#contact" className="hover:text-white transition">
+                    오시는 길
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Solution */}
+            <div>
+              <h4 className="font-bold text-white mb-4">Solution</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li>
+                  <a href="#services" className="hover:text-white transition">
+                    XAI Tax
+                  </a>
+                </li>
+                <li>
+                  <a href="#services" className="hover:text-white transition">
+                    XAI Audit
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    API Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    연동 사례
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="font-bold text-white mb-4">Legal</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    서비스 이용약관
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    개인정보 처리방침
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    보안 정책
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+            <div className="mb-4 md:mb-0">
+              © 2024 XAI KOREA Inc. All rights reserved.
+            </div>
+            <div className="text-center md:text-right">
+              사업자등록번호 123-45-67890 | 서울특별시 강남구 테헤란로 123
             </div>
           </div>
         </div>
