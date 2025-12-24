@@ -8,10 +8,103 @@ import { useEffect, useState } from 'react';
 import { useLocalizedData } from '../hooks/useLocalizedData';
 import useLanguageStore from '../store/languageStore';
 
+// Netlify Functions API URL (set in .env as VITE_CONTACT_API_URL)
+// Example: https://your-netlify-site.netlify.app/.netlify/functions/submit-contact
+const CONTACT_API_URL = import.meta.env.VITE_CONTACT_API_URL || '';
+
+interface ContactFormData {
+  name: string;
+  company: string;
+  email: string;
+  inquiryType: string;
+  message: string;
+  timestamp: string;
+}
+
 function LandingPage(): ReactElement {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguageStore();
   const data = useLocalizedData();
+
+  // Contact form state
+  const [formData, setFormData] = useState<ContactFormData>({
+    name: '',
+    company: '',
+    email: '',
+    inquiryType: 'service',
+    message: '',
+    timestamp: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle');
+
+  // Handle form input changes
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle form submission to Google Sheets
+  const handleFormSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+
+    if (!CONTACT_API_URL) {
+      console.error('Contact API URL is not configured');
+      setSubmitStatus('error');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const submitData = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+      };
+
+      const response = await fetch(CONTACT_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          company: '',
+          email: '',
+          inquiryType: 'service',
+          message: '',
+          timestamp: '',
+        });
+      } else {
+        throw new Error(result.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Initialize dark mode state from current DOM state
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -926,7 +1019,10 @@ function LandingPage(): ReactElement {
 
             {/* Right - Contact Form */}
             <div className="bg-background-dark p-8 rounded-2xl border border-gray-800 flex flex-col">
-              <form className="space-y-5 flex flex-col flex-1">
+              <form
+                className="space-y-5 flex flex-col flex-1"
+                onSubmit={handleFormSubmit}
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-400 text-sm mb-2">
@@ -936,6 +1032,10 @@ function LandingPage(): ReactElement {
                       className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
                       placeholder={data.contact.form.namePlaceholder}
                       type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
                     />
                   </div>
                   <div>
@@ -946,6 +1046,9 @@ function LandingPage(): ReactElement {
                       className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
                       placeholder={data.contact.form.companyPlaceholder}
                       type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -958,6 +1061,10 @@ function LandingPage(): ReactElement {
                     className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
                     placeholder={data.contact.form.emailPlaceholder}
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
@@ -965,7 +1072,12 @@ function LandingPage(): ReactElement {
                   <label className="block text-gray-400 text-sm mb-2">
                     {data.contact.form.type}
                   </label>
-                  <select className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition appearance-none cursor-pointer">
+                  <select
+                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition appearance-none cursor-pointer"
+                    name="inquiryType"
+                    value={formData.inquiryType}
+                    onChange={handleInputChange}
+                  >
                     {data.contact.form.typeOptions.map((option, index) => (
                       <option key={index} value={option.value}>
                         {option.label}
@@ -981,17 +1093,55 @@ function LandingPage(): ReactElement {
                   <textarea
                     className="w-full flex-1 min-h-[100px] bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
                     placeholder={data.contact.form.messagePlaceholder}
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required
                   ></textarea>
                 </div>
 
+                {/* Success/Error Messages */}
+                {submitStatus === 'success' && (
+                  <div className="bg-green-500/20 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">
+                      check_circle
+                    </span>
+                    {language === 'ko'
+                      ? '문의가 성공적으로 전송되었습니다!'
+                      : 'Your inquiry has been sent successfully!'}
+                  </div>
+                )}
+                {submitStatus === 'error' && (
+                  <div className="bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">
+                      error
+                    </span>
+                    {language === 'ko'
+                      ? '전송에 실패했습니다. 다시 시도해주세요.'
+                      : 'Failed to send. Please try again.'}
+                  </div>
+                )}
+
                 <button
-                  className="w-full bg-ai-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2"
+                  className="w-full bg-ai-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   type="submit"
+                  disabled={isSubmitting}
                 >
-                  {data.contact.form.submit}
-                  <span className="material-symbols-outlined text-sm">
-                    arrow_forward
-                  </span>
+                  {isSubmitting ? (
+                    <>
+                      <span className="material-symbols-outlined text-sm animate-spin">
+                        sync
+                      </span>
+                      {language === 'ko' ? '전송 중...' : 'Sending...'}
+                    </>
+                  ) : (
+                    <>
+                      {data.contact.form.submit}
+                      <span className="material-symbols-outlined text-sm">
+                        arrow_forward
+                      </span>
+                    </>
+                  )}
                 </button>
               </form>
             </div>

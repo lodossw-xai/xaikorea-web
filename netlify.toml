@@ -1,0 +1,17 @@
+[build]
+  # Functions 디렉토리 지정
+  functions = "netlify/functions"
+  # 빌드 명령 (API만 사용하므로 빈 publish)
+  publish = "public"
+
+[functions]
+  # TypeScript 사용
+  node_bundler = "esbuild"
+  # 함수 디렉토리
+  directory = "netlify/functions"
+
+# 환경 변수 (실제 값은 Netlify Dashboard에서 설정)
+# GOOGLE_SERVICE_ACCOUNT_EMAIL
+# GOOGLE_PRIVATE_KEY
+# GOOGLE_SPREADSHEET_ID
+# ALLOWED_ORIGIN (GitHub Pages URL)
