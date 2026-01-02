@@ -525,10 +525,6 @@ function LandingPage(): ReactElement {
               </span>{' '}
               TrustTax
             </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">calculate</span>{' '}
-              CPAMate
-            </div>
           </div>
         </div>
       </section>
@@ -724,7 +720,7 @@ function LandingPage(): ReactElement {
                 <img
                   alt="Data processing"
                   className="absolute -bottom-10 -left-10 w-40 h-40 object-cover rounded-full border-4 border-white dark:border-gray-800 shadow-lg"
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&h=200&fit=crop"
+                  src="/assets/images/main/processing.png"
                 />
               </div>
             </div>
