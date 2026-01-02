@@ -754,33 +754,25 @@ function LandingPage(): ReactElement {
                 {data.advisors.items.map((advisor, index) => (
                   <div
                     key={index}
-                    className="w-[400px] shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative"
+                    className="w-[220px] shrink-0 bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative hover:shadow-lg hover:border-primary dark:hover:border-primary transition-all duration-300 group"
                   >
                     {advisor.isHead && (
-                      <div className="absolute -top-3 right-8 bg-black text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-black px-3 py-0.5 text-[10px] font-bold rounded-full shadow-md whitespace-nowrap">
                         HEAD ADVISOR
                       </div>
                     )}
-                    <div className="text-primary text-5xl mb-2 font-serif opacity-50">
-                      "
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
-                      "{advisor.quote}"
-                    </p>
-                    <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <div className="flex flex-col items-center text-center">
                       <img
                         alt={advisor.name}
-                        className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
+                        className="w-20 h-20 rounded-full object-cover ring-3 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary mb-4 transition-all duration-300"
                         src={advisor.image}
                       />
-                      <div>
-                        <h4 className="font-bold text-gray-900 dark:text-white">
-                          {advisor.name}
-                        </h4>
-                        <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                          {advisor.role}
-                        </p>
-                      </div>
+                      <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
+                        {advisor.name}
+                      </h4>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">
+                        {advisor.role}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -982,15 +974,13 @@ function LandingPage(): ReactElement {
                   </div>
                 </div>
 
-                {/* Map Placeholder - Google Map will be integrated */}
+                {/* Map - Google Map Embed */}
                 <div className="mt-8 flex-1 flex flex-col">
-                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[200px] relative">
-                    {/* Google Map iframe - Uses embed (no API key required) */}
-                    {/* For JavaScript API, use: import.meta.env.VITE_GOOGLE_MAPS_API_KEY */}
+                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[250px] relative">
+                    {/* Google Map iframe - Uses embed URL (no API key required) */}
                     <iframe
-                      src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8'}&q=서울특별시+강남구+테헤란로+123&zoom=15&language=ko`}
-                      width="100%"
-                      height="100%"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.3735759858837!2d127.1034054764739!3d37.40464407208092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca78a6e513e53%3A0xa9d8193a7f4470f0!2z7YyQ6rWQ7YWM7YGs64W467C466as7Iqk7YOA7Yq47JeF7Lqg7Y287Iqk!5e0!3m2!1sko!2skr!4v1767321462084!5m2!1sko!2skr"
+                      className="absolute inset-0 w-full h-full"
                       style={{
                         border: 0,
                         filter: 'grayscale(100%) invert(92%) contrast(83%)',
@@ -1002,10 +992,10 @@ function LandingPage(): ReactElement {
                     ></iframe>
                     {/* Map overlay button */}
                     <a
-                      href="https://maps.google.com/?q=서울특별시+강남구+테헤란로+123"
+                      href="https://maps.google.com/?q=경기도+성남시+분당구+판교로+289번길+20"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black transition"
+                      className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black transition z-10"
                     >
                       <span className="material-symbols-outlined text-sm">
                         map

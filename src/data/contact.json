@@ -5,15 +5,15 @@
     "info": {
       "address": {
         "label": "본사 위치",
-        "value": "서울특별시 강남구 테헤란로 123, 15층 XAI Tower"
+        "value": "경기도 성남시 분당구 판교로 289번길 20, 스타트업 캠퍼스"
       },
       "phone": {
         "label": "고객센터",
-        "value": "02-1234-5678 (평일 09:00 - 18:00)"
+        "value": "+82)10-3253-5409 (평일 09:00 - 18:00)"
       },
       "email": {
         "label": "이메일",
-        "value": "contact@xaikorea.com"
+        "value": "contact@xaikorea.ai.kr"
       }
     },
     "form": {
@@ -43,15 +43,15 @@
     "info": {
       "address": {
         "label": "Headquarters",
-        "value": "15F XAI Tower, 123 Teheran-ro, Gangnam-gu, Seoul"
+        "value": "20, Pangyo-ro 289beon-gil, Bundang-gu, Seongnam-si, Gyeonggi-do, Republic of Korea"
       },
       "phone": {
         "label": "Customer Service",
-        "value": "02-1234-5678 (Weekdays 09:00 - 18:00)"
+        "value": "+82)10-3253-5409 (Weekdays 09:00 - 18:00)"
       },
       "email": {
         "label": "Email",
-        "value": "contact@xaikorea.com"
+        "value": "contact@xaikorea.ai.kr"
       }
     },
     "form": {
