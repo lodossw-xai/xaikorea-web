@@ -1,5 +1,5 @@
 /**
- * Landing Page - TaxAI One Page Template
+ * Landing Page - XAI Korea One Page Template
  * Constitution I: Functional Component
  * Based on html/code.html design
  */
@@ -142,11 +142,18 @@ function LandingPage(): ReactElement {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-              <span className="material-symbols-outlined text-4xl text-black dark:text-primary">
-                auto_graph
-              </span>
+              <img
+                src="/assets/images/logo/logo-light.png"
+                alt="XAI Korea Logo"
+                className="h-12 w-auto dark:hidden"
+              />
+              <img
+                src="/assets/images/logo/logo-dark.png"
+                alt="XAI Korea Logo"
+                className="h-12 w-auto hidden dark:block"
+              />
               <span className="font-display font-bold text-2xl tracking-tight text-gray-900 dark:text-white">
-                Tax<span className="text-primary">AI</span>
+                XAI <span className="text-primary">Korea</span>
               </span>
             </div>
 
@@ -770,9 +777,10 @@ function LandingPage(): ReactElement {
                       <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
                         {advisor.name}
                       </h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">
-                        {advisor.role}
-                      </p>
+                      <p
+                        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                        dangerouslySetInnerHTML={{ __html: advisor.role }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -1146,9 +1154,11 @@ function LandingPage(): ReactElement {
             {/* Logo & Description */}
             <div className="col-span-2 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <span className="material-symbols-outlined text-2xl text-primary">
-                  auto_graph
-                </span>
+                <img
+                  src="/assets/images/logo/logo-dark.png"
+                  alt="XAI Korea Logo"
+                  className="h-10 w-auto"
+                />
                 <span className="font-display font-bold text-xl tracking-tight">
                   {data.footer.logo.name}{' '}
                   <span className="text-primary">

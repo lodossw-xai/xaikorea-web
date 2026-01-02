@@ -6,8 +6,8 @@
     },
     "items": [
       {
-        "question": "고객 프로젝트에 TaxAI를 사용할 수 있나요?",
-        "answer": "네, TaxAI는 회계법인, 세무법인, 기업 내부 세무팀 등 다양한 환경에서 활용 가능합니다. 엔터프라이즈 플랜을 통해 팀 전체가 사용할 수 있습니다."
+        "question": "고객 프로젝트에 XAI Korea를 사용할 수 있나요?",
+        "answer": "네, XAI Korea는 회계법인, 세무법인, 기업 내부 세무팀 등 다양한 환경에서 활용 가능합니다. 엔터프라이즈 플랜을 통해 팀 전체가 사용할 수 있습니다."
       },
       {
         "question": "데이터는 안전한가요?",
@@ -26,8 +26,8 @@
     },
     "items": [
       {
-        "question": "Can I use TaxAI for client projects?",
-        "answer": "Yes, TaxAI can be used in various environments including accounting firms, tax firms, and corporate tax teams. Enterprise plans allow your entire team to use it."
+        "question": "Can I use XAI Korea for client projects?",
+        "answer": "Yes, XAI Korea can be used in various environments including accounting firms, tax firms, and corporate tax teams. Enterprise plans allow your entire team to use it."
       },
       {
         "question": "Is my data secure?",
