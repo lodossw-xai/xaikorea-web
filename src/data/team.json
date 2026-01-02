@@ -5,34 +5,22 @@
     "description": "AI 엔지니어와 CPA/세무사가 하나의 팀으로 움직입니다.",
     "members": [
       {
-        "name": "이동석",
-        "role": "CEO / FOUNDER",
-        "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-        "bio": [
-          "서울대 컴퓨터공학 박사",
-          "前 네이버, 카카오 AI Lab 리드",
-          "대규모 언어모델 최적화 전문가"
-        ]
+        "name": "이종석",
+        "role": "Principal Developer",
+        "image": "/assets/images/members/harry.png",
+        "bio": []
       },
       {
         "name": "김재환",
-        "role": "CTO / AI RESEARCH",
-        "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop",
-        "bio": [
-          "KAIST AI 대학원 석사",
-          "자연어 처리(NLP) 및 RAG 시스템 아키텍처",
-          "데이터 신뢰성 알고리즘 총괄"
-        ]
+        "role": "CEO / FOUNDER",
+        "image": "/assets/images/members/kim_jh.webp",
+        "bio": []
       },
       {
-        "name": "김정인",
-        "role": "CFO / CPA",
-        "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
-        "bio": [
-          "KICPA 공인회계사",
-          "前 삼일회계법인, 딜로이트 안진",
-          "실무 중심 서비스 기획 및 자문 총괄"
-        ]
+        "name": "김경만",
+        "role": "Security Engineer",
+        "image": "/assets/images/members/kim_km.jpg",
+        "bio": []
       }
     ]
   },
@@ -42,34 +30,22 @@
     "description": "AI engineers and CPAs/tax accountants work as one team.",
     "members": [
       {
-        "name": "Dongseok Lee",
+        "name": "Harry J. Lee",
         "role": "CEO / FOUNDER",
-        "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-        "bio": [
-          "Ph.D. in Computer Science, Seoul National University",
-          "Former AI Lab Lead at Naver, Kakao",
-          "Large Language Model Optimization Expert"
-        ]
+        "image": "/assets/images/members/harry.png",
+        "bio": []
       },
       {
         "name": "Jaehwan Kim",
-        "role": "CTO / AI RESEARCH",
-        "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop",
-        "bio": [
-          "M.S. in AI, KAIST",
-          "NLP and RAG System Architecture",
-          "Data Reliability Algorithm Lead"
-        ]
+        "role": "CEO / FOUNDER",
+        "image": "/assets/images/members/kim_jh.webp",
+        "bio": []
       },
       {
         "name": "Jungin Kim",
-        "role": "CFO / CPA",
-        "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
-        "bio": [
-          "KICPA Certified Public Accountant",
-          "Former Samil PwC, Deloitte Anjin",
-          "Practice-focused Service Planning Lead"
-        ]
+        "role": "Security Engineer",
+        "image": "/assets/images/members/kim_km.jpg",
+        "bio": []
       }
     ]
   }

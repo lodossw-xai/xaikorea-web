@@ -989,10 +989,7 @@ function LandingPage(): ReactElement {
                     <iframe
                       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.3735759858837!2d127.1034054764739!3d37.40464407208092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca78a6e513e53%3A0xa9d8193a7f4470f0!2z7YyQ6rWQ7YWM7YGs64W467C466as7Iqk7YOA7Yq47JeF7Lqg7Y287Iqk!5e0!3m2!1sko!2skr!4v1767321462084!5m2!1sko!2skr"
                       className="absolute inset-0 w-full h-full"
-                      style={{
-                        border: 0,
-                        filter: 'grayscale(100%) invert(92%) contrast(83%)',
-                      }}
+                      style={{ border: 0 }}
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
