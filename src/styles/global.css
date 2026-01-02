@@ -236,9 +236,84 @@
     word-break: keep-all;
   }
 
-  /* Dark Mode Hero Section */
+  /* Dark Mode Styles */
+
+  /* Body */
+  :root.dark body {
+    background-color: var(--color-background-dark);
+    color: rgb(229, 231, 235); /* gray-200 */
+  }
+
+  /* Hero Section */
   :root.dark #home {
     background-color: var(--color-hero-dark) !important;
+  }
+
+  /* All sections with bg-white */
+  :root.dark section.bg-white,
+  :root.dark .bg-white {
+    background-color: var(--color-surface-dark);
+  }
+
+  /* Partners section - black/40 */
+  :root.dark section.border-y.bg-white {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* Surface light sections */
+  :root.dark .bg-surface-light {
+    background-color: var(--color-background-dark);
+  }
+
+  /* Text colors */
+  :root.dark .text-gray-800,
+  :root.dark .text-gray-900 {
+    color: rgb(255, 255, 255);
+  }
+
+  :root.dark .text-gray-600 {
+    color: rgb(209, 213, 219); /* gray-300 */
+  }
+
+  :root.dark .text-gray-500 {
+    color: rgb(156, 163, 175); /* gray-400 */
+  }
+
+  :root.dark .text-gray-400 {
+    color: rgb(107, 114, 128); /* gray-500 */
+  }
+
+  /* Border colors */
+  :root.dark .border-gray-100 {
+    border-color: rgb(31, 41, 55); /* gray-800 */
+  }
+
+  :root.dark .border-gray-200 {
+    border-color: rgb(31, 41, 55); /* gray-800 */
+  }
+
+  :root.dark .border-gray-700 {
+    border-color: rgb(55, 65, 81);
+  }
+
+  /* Navigation */
+  :root.dark nav {
+    background-color: rgba(15, 23, 42, 0.9);
+    border-bottom-color: rgb(31, 41, 55);
+  }
+
+  /* Cards and surfaces */
+  :root.dark .bg-surface-dark {
+    background-color: var(--color-surface-dark);
+  }
+
+  :root.dark .bg-gray-50,
+  :root.dark .bg-gray-100 {
+    background-color: rgb(31, 41, 55); /* gray-800 */
+  }
+
+  :root.dark .bg-gray-800 {
+    background-color: rgb(17, 24, 39); /* gray-900 */
   }
 }
 
