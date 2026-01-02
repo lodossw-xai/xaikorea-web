@@ -881,7 +881,7 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Section
       <section className="py-24 bg-surface-light dark:bg-background-dark">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display font-extrabold text-3xl text-center text-gray-900 dark:text-white mb-16 reveal-text">
@@ -913,6 +913,7 @@ function LandingPage(): ReactElement {
           </div>
         </div>
       </section>
+       */}
 
       {/* Contact Section */}
       <section className="bg-hero-dark text-white py-20" id="contact">
