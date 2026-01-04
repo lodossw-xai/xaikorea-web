@@ -597,7 +597,7 @@ function LandingPage(): ReactElement {
                 <img
                   alt="Accountant analyzing data"
                   className="w-full rounded-2xl grayscale hover:grayscale-0 transition duration-500"
-                  src="https://images.unsplash.com/photo-1554224311-beee4ece0933?w=800&h=600&fit=crop"
+                  src="/assets/images/main/processing_01.png"
                 />
               </div>
             </div>
