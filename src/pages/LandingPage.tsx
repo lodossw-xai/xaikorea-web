@@ -4,13 +4,16 @@
  * Based on html/code.html design
  */
 import type { ReactElement } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { Link } from 'react-router-dom';
 import { useLocalizedData } from '../hooks/useLocalizedData';
 import useLanguageStore from '../store/languageStore';
 
 // Netlify Functions API URL (set in .env as VITE_CONTACT_API_URL)
 // Example: https://your-netlify-site.netlify.app/.netlify/functions/submit-contact
 const CONTACT_API_URL = import.meta.env.VITE_CONTACT_API_URL || '';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
 
 interface ContactFormData {
   name: string;
@@ -19,6 +22,7 @@ interface ContactFormData {
   inquiryType: string;
   message: string;
   timestamp: string;
+  captchaToken?: string | null;
 }
 
 function LandingPage(): ReactElement {
@@ -39,6 +43,9 @@ function LandingPage(): ReactElement {
   const [submitStatus, setSubmitStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle');
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // Handle form input changes
   const handleInputChange = (
@@ -62,6 +69,16 @@ function LandingPage(): ReactElement {
       return;
     }
 
+    // Only validate captcha if the site key is configured
+    if (RECAPTCHA_SITE_KEY && !captchaToken) {
+      alert(
+        language === 'ko'
+          ? '캡차 인증을 완료해주세요.'
+          : 'Please complete the CAPTCHA.'
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -76,7 +93,7 @@ function LandingPage(): ReactElement {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(submitData),
+        body: JSON.stringify({ ...submitData, captchaToken }),
       });
 
       if (!response.ok) {
@@ -95,6 +112,10 @@ function LandingPage(): ReactElement {
           message: '',
           timestamp: '',
         });
+        setCaptchaToken(null);
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
       } else {
         throw new Error(result.error || 'Unknown error');
       }
@@ -172,15 +193,15 @@ function LandingPage(): ReactElement {
               </a>
               <a
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
-                href="#advisors"
-              >
-                {data.navigation.nav.advisors}
-              </a>
-              <a
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#team"
               >
                 {data.navigation.nav.team}
+              </a>
+              <a
+                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
+                href="#advisors"
+              >
+                {data.navigation.nav.advisors}
               </a>
 
               <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full px-1 py-1">
@@ -263,17 +284,17 @@ function LandingPage(): ReactElement {
             </a>
             <a
               className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
-              href="#advisors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {data.navigation.nav.advisors}
-            </a>
-            <a
-              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
               href="#team"
               onClick={() => setMobileMenuOpen(false)}
             >
               {data.navigation.nav.team}
+            </a>
+            <a
+              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
+              href="#advisors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {data.navigation.nav.advisors}
             </a>
 
             <div className="flex items-center justify-center gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -501,34 +522,6 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* Partners Section */}
-      <section className="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-black/40 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-8">
-            업계 최고의 파트너들과 함께합니다
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">account_balance</span>{' '}
-              TaxCorp
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">analytics</span>{' '}
-              AuditFlow
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">gavel</span> LegalAI
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">
-                assured_workload
-              </span>{' '}
-              TrustTax
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Services Section */}
       <section
         className="py-24 bg-surface-light dark:bg-background-dark"
@@ -728,64 +721,6 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* Advisors Section - Rolling Banner */}
-      <section
-        className="py-24 bg-surface-light dark:bg-background-dark border-y border-gray-200 dark:border-gray-800 overflow-hidden"
-        id="advisors"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-16 reveal-text">
-            <span className="text-ai-blue">
-              {data.advisors.title.highlight}
-            </span>
-            {data.advisors.title.main}
-          </h2>
-        </div>
-
-        {/* Rolling Banner Container */}
-        <div className="relative">
-          {/* Gradient Overlay - Left */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
-          {/* Gradient Overlay - Right */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
-
-          {/* Scrolling Track */}
-          <div className="flex gap-6 scroll-track">
-            {/* Original Cards + Duplicates for seamless loop */}
-            {[...Array(2)].map((_, setIndex) => (
-              <div key={setIndex} className="flex gap-6">
-                {data.advisors.items.map((advisor, index) => (
-                  <div
-                    key={index}
-                    className="w-[220px] shrink-0 bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative hover:shadow-lg hover:border-primary dark:hover:border-primary transition-all duration-300 group"
-                  >
-                    {advisor.isHead && (
-                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-black px-3 py-0.5 text-[10px] font-bold rounded-full shadow-md whitespace-nowrap">
-                        HEAD ADVISOR
-                      </div>
-                    )}
-                    <div className="flex flex-col items-center text-center">
-                      <img
-                        alt={advisor.name}
-                        className="w-20 h-20 rounded-full object-cover ring-3 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary mb-4 transition-all duration-300"
-                        src={advisor.image}
-                      />
-                      <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
-                        {advisor.name}
-                      </h4>
-                      <p
-                        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
-                        dangerouslySetInnerHTML={{ __html: advisor.role }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Team Section */}
       <section
         className="py-24 bg-surface-light dark:bg-background-dark"
@@ -829,6 +764,64 @@ function LandingPage(): ReactElement {
                     <p key={bioIndex}>{line}</p>
                   ))}
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Advisors Section - Rolling Banner */}
+      <section
+        className="py-24 bg-surface-light dark:bg-background-dark border-y border-gray-200 dark:border-gray-800 overflow-hidden"
+        id="advisors"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-16 reveal-text">
+            <span className="text-ai-blue">
+              {data.advisors.title.highlight}
+            </span>
+            {data.advisors.title.main}
+          </h2>
+        </div>
+
+        {/* Rolling Banner Container */}
+        <div className="relative">
+          {/* Gradient Overlay - Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient Overlay - Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+
+          {/* Scrolling Track */}
+          <div className="flex gap-6 scroll-track">
+            {/* Original Cards + Duplicates for seamless loop */}
+            {[...Array(2)].map((_, setIndex) => (
+              <div key={setIndex} className="flex gap-6">
+                {data.advisors.items.map((advisor, index) => (
+                  <div
+                    key={index}
+                    className="w-[220px] shrink-0 bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative hover:shadow-lg hover:border-primary dark:hover:border-primary transition-all duration-300 group"
+                  >
+                    {advisor.isHead && (
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-black px-3 py-0.5 text-[10px] font-bold rounded-full shadow-md whitespace-nowrap">
+                        HEAD ADVISOR
+                      </div>
+                    )}
+                    <div className="flex flex-col items-center text-center">
+                      <img
+                        alt={advisor.name}
+                        className="w-20 h-20 rounded-full object-cover ring-3 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary mb-4 transition-all duration-300"
+                        src={advisor.image}
+                      />
+                      <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
+                        {advisor.name}
+                      </h4>
+                      <p
+                        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                        dangerouslySetInnerHTML={{ __html: advisor.role }}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -911,6 +904,69 @@ function LandingPage(): ReactElement {
       </section>
        */}
 
+      {/* Partners Section - Rolling Banner */}
+      <section className="py-12 bg-white dark:bg-black/40 border-y border-gray-100 dark:border-gray-800 overflow-hidden">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+          <p className="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+            업계 최고의 파트너들과 함께합니다
+          </p>
+        </div> */}
+        <div className="relative">
+          {/* Gradient Overlay - Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-white dark:from-[#0B1120] to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient Overlay - Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-white dark:from-[#0B1120] to-transparent z-10 pointer-events-none"></div>
+
+          {/* Partners List */}
+          {(() => {
+            const partners = [
+              { name: 'TaxCorp', icon: 'account_balance' },
+              { name: 'AuditFlow', icon: 'analytics' },
+              { name: 'LegalAI', icon: 'gavel' },
+              { name: 'TrustTax', icon: 'assured_workload' },
+            ];
+
+            const rollDesktop = partners.length > 5;
+            const rollMobile = partners.length > 2;
+
+            return (
+              <div
+                className={`flex gap-16 ${
+                  rollDesktop
+                    ? 'scroll-track'
+                    : rollMobile
+                      ? 'max-md:scroll-track md:justify-center md:w-full md:animate-none'
+                      : 'justify-center w-full'
+                }`}
+              >
+                {[...Array(rollDesktop || rollMobile ? 2 : 1)].map(
+                  (_, setIndex) => (
+                    <div
+                      key={setIndex}
+                      className={`flex gap-16 items-center ${
+                        !rollDesktop && setIndex === 1 ? 'md:hidden' : ''
+                      } ${!rollMobile && setIndex === 1 ? 'max-md:hidden' : ''}`}
+                    >
+                      {partners.map((partner, pIndex) => (
+                        <div
+                          key={`${setIndex}-${pIndex}`}
+                          className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default shrink-0"
+                        >
+                          <span className="material-symbols-outlined">
+                            {partner.icon}
+                          </span>{' '}
+                          {partner.name}
+                        </div>
+                      ))}
+                    </div>
+                  )
+                )}
+              </div>
+            );
+          })()}
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section className="bg-hero-dark text-white py-20" id="contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -982,9 +1038,8 @@ function LandingPage(): ReactElement {
                 {/* Map - Google Map Embed */}
                 <div className="mt-8 flex-1 flex flex-col">
                   <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[250px] relative">
-                    {/* Google Map iframe - Uses embed URL (no API key required) */}
                     <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.3735759858837!2d127.1034054764739!3d37.40464407208092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca78a6e513e53%3A0xa9d8193a7f4470f0!2z7YyQ6rWQ7YWM7YGs64W467C466as7Iqk7YOA7Yq47JeF7Lqg7Y287Iqk!5e0!3m2!1sko!2skr!4v1767321462084!5m2!1sko!2skr"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.38843992964!2d127.10338097788475!3d37.40429267208111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca7c1a2dd176b%3A0xf609789d0ae4d6b0!2z6rK96riwIOyKpO2DgO2KuOyXheueqSjqsr3quLDquIDroZzrsozqsozsnoTshLzthLAp!5e0!3m2!1sko!2skr!4v1767659706880!5m2!1sko!2skr"
                       className="absolute inset-0 w-full h-full"
                       style={{ border: 0 }}
                       allowFullScreen
@@ -1091,6 +1146,18 @@ function LandingPage(): ReactElement {
                     required
                   ></textarea>
                 </div>
+
+                {/* reCAPTCHA */}
+                {RECAPTCHA_SITE_KEY && (
+                  <div className="flex justify-center my-2">
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={RECAPTCHA_SITE_KEY}
+                      onChange={(token) => setCaptchaToken(token)}
+                      theme="dark"
+                    />
+                  </div>
+                )}
 
                 {/* Success/Error Messages */}
                 {submitStatus === 'success' && (
@@ -1200,9 +1267,21 @@ function LandingPage(): ReactElement {
               <ul className="space-y-3 text-sm text-gray-400">
                 {data.footer.menus.company.items.map((item, index) => (
                   <li key={index}>
-                    <a href={item.href} className="hover:text-white transition">
-                      {item.label}
-                    </a>
+                    {item.href.startsWith('/') ? (
+                      <Link
+                        to={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -1216,9 +1295,21 @@ function LandingPage(): ReactElement {
               <ul className="space-y-3 text-sm text-gray-400">
                 {data.footer.menus.solution.items.map((item, index) => (
                   <li key={index}>
-                    <a href={item.href} className="hover:text-white transition">
-                      {item.label}
-                    </a>
+                    {item.href.startsWith('/') ? (
+                      <Link
+                        to={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -1232,9 +1323,21 @@ function LandingPage(): ReactElement {
               <ul className="space-y-3 text-sm text-gray-400">
                 {data.footer.menus.legal.items.map((item, index) => (
                   <li key={index}>
-                    <a href={item.href} className="hover:text-white transition">
-                      {item.label}
-                    </a>
+                    {item.href.startsWith('/') ? (
+                      <Link
+                        to={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

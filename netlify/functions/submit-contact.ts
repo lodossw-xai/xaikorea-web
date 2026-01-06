@@ -10,6 +10,7 @@ interface ContactFormData {
   inquiryType: string;
   message: string;
   timestamp?: string;
+  captchaToken?: string;
 }
 
 interface NetlifyEvent {
@@ -61,6 +62,43 @@ export async function handler(event: NetlifyEvent): Promise<NetlifyResponse> {
     }
 
     const formData: ContactFormData = JSON.parse(event.body);
+
+    // Verify reCAPTCHA
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    if (secretKey) {
+      if (!formData.captchaToken) {
+        return {
+          statusCode: 400,
+          headers: corsHeaders,
+          body: JSON.stringify({ error: 'CAPTCHA token is required' }),
+        };
+      }
+
+      // Verification with Google API
+      const verifyResponse = await fetch(
+        'https://www.google.com/recaptcha/api/siteverify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `secret=${secretKey}&response=${formData.captchaToken}`,
+        }
+      );
+
+      const verifyResult: any = await verifyResponse.json();
+
+      if (!verifyResult.success) {
+        return {
+          statusCode: 400,
+          headers: corsHeaders,
+          body: JSON.stringify({
+            error: 'CAPTCHA verification failed',
+            details: verifyResult['error-codes'],
+          }),
+        };
+      }
+    }
 
     // Validate required fields
     if (!formData.name || !formData.email || !formData.message) {

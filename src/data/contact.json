@@ -5,7 +5,7 @@
     "info": {
       "address": {
         "label": "본사 위치",
-        "value": "경기도 성남시 분당구 판교로 289번길 20, 스타트업 캠퍼스"
+        "value": "경기도 성남시 분당구 삼평동 판교로 289번길 20, 경기스타트업랩"
       },
       "phone": {
         "label": "고객센터",
@@ -43,7 +43,7 @@
     "info": {
       "address": {
         "label": "Headquarters",
-        "value": "20, Pangyo-ro 289beon-gil, Bundang-gu, Seongnam-si, Gyeonggi-do, Republic of Korea"
+        "value": "20, Pangyo-ro 289beon-gil, Sampyeong-dong, Bundang-gu, Seongnam-si, Gyeonggi-do,Republic of Korea"
       },
       "phone": {
         "label": "Customer Service",
