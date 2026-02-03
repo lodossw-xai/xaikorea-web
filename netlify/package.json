@@ -7,7 +7,7 @@
     "build": "echo 'No build required for functions only'"
   },
   "dependencies": {
-    "googleapis": "^126.0.0"
+    "resend": "^6.9.1"
   },
   "devDependencies": {
     "@netlify/functions": "^2.4.0",

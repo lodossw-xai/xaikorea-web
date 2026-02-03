@@ -41,11 +41,18 @@ function LandingPage(): ReactElement {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<
-    'idle' | 'success' | 'error'
+    'idle' | 'success' | 'error' | 'captcha-required'
   >('idle');
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  // Reset captcha-required status when captcha is completed
+  useEffect(() => {
+    if (captchaToken && submitStatus === 'captcha-required') {
+      setSubmitStatus('idle');
+    }
+  }, [captchaToken, submitStatus]);
 
   // Handle form input changes
   const handleInputChange = (
@@ -71,11 +78,7 @@ function LandingPage(): ReactElement {
 
     // Only validate captcha if the site key is configured
     if (RECAPTCHA_SITE_KEY && !captchaToken) {
-      alert(
-        language === 'ko'
-          ? '캡차 인증을 완료해주세요.'
-          : 'Please complete the CAPTCHA.'
-      );
+      setSubmitStatus('captcha-required');
       return;
     }
 
@@ -1149,13 +1152,52 @@ function LandingPage(): ReactElement {
 
                 {/* reCAPTCHA */}
                 {RECAPTCHA_SITE_KEY && (
-                  <div className="flex justify-center my-2">
-                    <ReCAPTCHA
-                      ref={recaptchaRef}
-                      sitekey={RECAPTCHA_SITE_KEY}
-                      onChange={(token) => setCaptchaToken(token)}
-                      theme="dark"
-                    />
+                  <div className="space-y-2">
+                    <label className="block text-gray-400 text-sm">
+                      {language === 'ko'
+                        ? '보안 인증'
+                        : 'Security Verification'}
+                    </label>
+                    <div
+                      className={`flex flex-col items-center p-4 rounded-xl border transition-all ${
+                        captchaToken
+                          ? 'border-green-500/50 bg-green-500/10'
+                          : 'border-gray-700 bg-gray-800/50'
+                      }`}
+                    >
+                      {/* reCAPTCHA Widget */}
+                      <div className="mb-3">
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={RECAPTCHA_SITE_KEY}
+                          onChange={(token) => setCaptchaToken(token)}
+                          onExpired={() => setCaptchaToken(null)}
+                          theme="dark"
+                          size="normal"
+                        />
+                      </div>
+
+                      {/* Status Indicator */}
+                      {captchaToken ? (
+                        <div className="flex items-center gap-2 text-green-400 text-sm">
+                          <span className="material-symbols-outlined text-base">
+                            verified
+                          </span>
+                          {language === 'ko'
+                            ? '인증 완료'
+                            : 'Verification Complete'}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                          <span className="material-symbols-outlined text-base">
+                            security
+                          </span>
+                          {language === 'ko'
+                            ? '위의 체크박스를 클릭해주세요'
+                            : 'Please check the box above'}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -1178,6 +1220,16 @@ function LandingPage(): ReactElement {
                     {language === 'ko'
                       ? '전송에 실패했습니다. 다시 시도해주세요.'
                       : 'Failed to send. Please try again.'}
+                  </div>
+                )}
+                {submitStatus === 'captcha-required' && (
+                  <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-100 dark:border-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">
+                      warning
+                    </span>
+                    {language === 'ko'
+                      ? '보안 인증(CAPTCHA)을 완료해주세요.'
+                      : 'Please complete the security verification (CAPTCHA).'}
                   </div>
                 )}
 

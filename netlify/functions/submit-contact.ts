@@ -1,7 +1,8 @@
-// Netlify Function: Submit contact form to Google Sheets
-// Using Google Sheets API with Service Account
+import { Resend } from 'resend';
 
-import { google } from 'googleapis';
+// ============================================================
+// Type Definitions
+// ============================================================
 
 interface ContactFormData {
   name: string;
@@ -25,28 +26,181 @@ interface NetlifyResponse {
   body: string;
 }
 
-// CORS headers for cross-origin requests (if using separate domains)
-const corsHeaders = {
-  'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+// ============================================================
+// Configuration
+// ============================================================
+
+const CONFIG = {
+  resendApiKey: process.env.RESEND_API_KEY,
+  senderEmail: process.env.SENDER_EMAIL || 'noreply@xaikorea.ai.kr',
+  recipientEmail: process.env.RECIPIENT_EMAIL || 'request@xaikorea.ai.kr',
+  recaptchaSecretKey: process.env.RECAPTCHA_SECRET_KEY,
+  allowedOrigin: process.env.ALLOWED_ORIGIN || '*',
 };
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': CONFIG.allowedOrigin,
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Content-Type': 'application/json',
+};
+
+// ============================================================
+// Utility Functions
+// ============================================================
+
+/**
+ * Verify reCAPTCHA token with Google
+ */
+async function verifyCaptcha(
+  token: string
+): Promise<{ success: boolean; errorCodes?: string[] }> {
+  if (!CONFIG.recaptchaSecretKey) {
+    console.warn('reCAPTCHA secret key not configured, skipping verification');
+    return { success: true };
+  }
+
+  try {
+    const response = await fetch(
+      'https://www.google.com/recaptcha/api/siteverify',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `secret=${CONFIG.recaptchaSecretKey}&response=${token}`,
+      }
+    );
+
+    const data = (await response.json()) as {
+      success: boolean;
+      'error-codes'?: string[];
+    };
+    return {
+      success: data.success,
+      errorCodes: data['error-codes'],
+    };
+  } catch (error) {
+    console.error('reCAPTCHA verification failed:', error);
+    return { success: false, errorCodes: ['verification-failed'] };
+  }
+}
+
+/**
+ * Format inquiry type to Korean/English
+ */
+function formatInquiryType(type: string): string {
+  const types: { [key: string]: string } = {
+    service: '서비스 문의',
+    partnership: '파트너십 문의',
+    technical: '기술 문의',
+    other: '기타 문의',
+  };
+  return types[type] || type;
+}
+
+/**
+ * Send email using Resend API
+ */
+async function sendEmailWithResend(
+  formData: ContactFormData,
+  timestamp: string
+): Promise<void> {
+  if (!CONFIG.resendApiKey) {
+    throw new Error('RESEND_API_KEY is not configured');
+  }
+
+  const resend = new Resend(CONFIG.resendApiKey);
+
+  const inquiryTypeKo = formatInquiryType(formData.inquiryType);
+
+  const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+    .field { margin-bottom: 20px; }
+    .field-label { font-weight: bold; color: #6b7280; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; }
+    .field-value { background: white; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb; }
+    .message-box { background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea; }
+    .footer { background: #1f2937; color: #9ca3af; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📬 새로운 문의가 접수되었습니다</h1>
+    </div>
+    <div class="content">
+      <div class="field">
+        <div class="field-label">이름</div>
+        <div class="field-value">${formData.name}</div>
+      </div>
+      <div class="field">
+        <div class="field-label">회사</div>
+        <div class="field-value">${formData.company || '(미입력)'}</div>
+      </div>
+      <div class="field">
+        <div class="field-label">이메일</div>
+        <div class="field-value"><a href="mailto:${formData.email}">${formData.email}</a></div>
+      </div>
+      <div class="field">
+        <div class="field-label">문의 유형</div>
+        <div class="field-value">${inquiryTypeKo}</div>
+      </div>
+      <div class="field">
+        <div class="field-label">문의 내용</div>
+        <div class="message-box">${formData.message.replace(/\n/g, '<br>')}</div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>접수 시간: ${timestamp}</p>
+      <p>XAI Korea Contact Form</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  const { error } = await resend.emails.send({
+    from: `XAI Korea <${CONFIG.senderEmail}>`,
+    to: [CONFIG.recipientEmail],
+    replyTo: formData.email,
+    subject: `[XAI Korea 문의] ${inquiryTypeKo} - ${formData.name}`,
+    html: emailHtml,
+  });
+
+  if (error) {
+    console.error('Resend email error:', error);
+    throw new Error(`Failed to send email: ${error.message}`);
+  }
+
+  console.log(`Email sent successfully to ${CONFIG.recipientEmail}`);
+}
+
+// ============================================================
+// Main Handler
+// ============================================================
+
 export async function handler(event: NetlifyEvent): Promise<NetlifyResponse> {
-  // Handle CORS preflight request
+  // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 204,
-      headers: corsHeaders,
+      headers: CORS_HEADERS,
       body: '',
     };
   }
 
-  // Only allow POST requests
+  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers: corsHeaders,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
@@ -56,121 +210,73 @@ export async function handler(event: NetlifyEvent): Promise<NetlifyResponse> {
     if (!event.body) {
       return {
         statusCode: 400,
-        headers: corsHeaders,
+        headers: CORS_HEADERS,
         body: JSON.stringify({ error: 'Request body is required' }),
       };
     }
 
     const formData: ContactFormData = JSON.parse(event.body);
 
-    // Verify reCAPTCHA
-    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-    if (secretKey) {
-      if (!formData.captchaToken) {
-        return {
-          statusCode: 400,
-          headers: corsHeaders,
-          body: JSON.stringify({ error: 'CAPTCHA token is required' }),
-        };
-      }
-
-      // Verification with Google API
-      const verifyResponse = await fetch(
-        'https://www.google.com/recaptcha/api/siteverify',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `secret=${secretKey}&response=${formData.captchaToken}`,
-        }
-      );
-
-      const verifyResult: any = await verifyResponse.json();
-
-      if (!verifyResult.success) {
-        return {
-          statusCode: 400,
-          headers: corsHeaders,
-          body: JSON.stringify({
-            error: 'CAPTCHA verification failed',
-            details: verifyResult['error-codes'],
-          }),
-        };
-      }
-    }
-
     // Validate required fields
     if (!formData.name || !formData.email || !formData.message) {
       return {
         statusCode: 400,
-        headers: corsHeaders,
+        headers: CORS_HEADERS,
         body: JSON.stringify({
           error: 'Name, email, and message are required',
         }),
       };
     }
 
-    // Initialize Google Sheets API with Service Account
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      },
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-
-    const sheets = google.sheets({ version: 'v4', auth });
-
-    // Spreadsheet ID from environment variable
-    const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID;
-
-    if (!spreadsheetId) {
-      console.error('GOOGLE_SPREADSHEET_ID is not configured');
+    // Verify reCAPTCHA
+    if (formData.captchaToken) {
+      const captchaResult = await verifyCaptcha(formData.captchaToken);
+      if (!captchaResult.success) {
+        console.error('CAPTCHA verification failed:', captchaResult.errorCodes);
+        return {
+          statusCode: 400,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({ error: 'CAPTCHA verification failed' }),
+        };
+      }
+    } else if (CONFIG.recaptchaSecretKey) {
+      // CAPTCHA required but not provided
       return {
-        statusCode: 500,
-        headers: corsHeaders,
-        body: JSON.stringify({ error: 'Server configuration error' }),
+        statusCode: 400,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: 'CAPTCHA token is required' }),
       };
     }
 
-    // Append row to the spreadsheet
-    const timestamp = formData.timestamp || new Date().toISOString();
-
-    await sheets.spreadsheets.values.append({
-      spreadsheetId,
-      range: 'Sheet1!A:F', // Adjust range as needed
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values: [
-          [
-            timestamp,
-            formData.name,
-            formData.company || '',
-            formData.email,
-            formData.inquiryType || '',
-            formData.message,
-          ],
-        ],
-      },
+    // Generate timestamp
+    const timestamp = new Date().toLocaleString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
     });
+
+    // Send email
+    await sendEmailWithResend(formData, timestamp);
 
     return {
       statusCode: 200,
-      headers: corsHeaders,
+      headers: CORS_HEADERS,
       body: JSON.stringify({
         success: true,
-        message: 'Form submitted successfully',
+        message: '문의가 성공적으로 전송되었습니다.',
       }),
     };
   } catch (error) {
-    console.error('Error submitting form:', error);
-
+    console.error('Error processing contact form:', error);
     return {
       statusCode: 500,
-      headers: corsHeaders,
+      headers: CORS_HEADERS,
       body: JSON.stringify({
-        error: 'Failed to submit form',
+        error: 'Failed to process contact form',
         details: error instanceof Error ? error.message : 'Unknown error',
       }),
     };
