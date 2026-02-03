@@ -1040,7 +1040,7 @@ function LandingPage(): ReactElement {
 
                 {/* Map - Google Map Embed */}
                 <div className="mt-8 flex-1 flex flex-col">
-                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[250px] relative">
+                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[350px] relative">
                     <iframe
                       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.38843992964!2d127.10338097788475!3d37.40429267208111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca7c1a2dd176b%3A0xf609789d0ae4d6b0!2z6rK96riwIOyKpO2DgO2KuOyXheueqSjqsr3quLDquIDroZzrsozqsozsnoTshLzthLAp!5e0!3m2!1sko!2skr!4v1767659706880!5m2!1sko!2skr"
                       className="absolute inset-0 w-full h-full"
