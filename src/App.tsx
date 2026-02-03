@@ -1,13 +1,20 @@
-/**
- * App Component
- * Constitution I: Functional Component with Hooks
- * Constitution IV: Single Responsibility - Main app shell
- */
 import type { ReactElement } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import LegalPage from './pages/LegalPage';
 
 function App(): ReactElement {
-  return <LandingPage />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/privacy" element={<LegalPage type="privacy" />} />
+        <Route path="/terms" element={<LegalPage type="terms" />} />
+        {/* Fallback to home */}
+        <Route path="*" element={<LandingPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

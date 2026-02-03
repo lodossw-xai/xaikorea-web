@@ -1,0 +1,52 @@
+{
+  "ko": {
+    "badge": "",
+    "title": "OUR TEAM",
+    "description": "",
+    "members": [
+      {
+        "name": "이종석",
+        "role": "Principal Developer",
+        "image": "/assets/images/members/harry.png",
+        "bio": []
+      },
+      {
+        "name": "김재환",
+        "role": "CEO / FOUNDER",
+        "image": "/assets/images/members/kim_jh.webp",
+        "bio": []
+      },
+      {
+        "name": "김경만",
+        "role": "Security Engineer",
+        "image": "/assets/images/members/kim_km.jpg",
+        "bio": []
+      }
+    ]
+  },
+  "en": {
+    "badge": "",
+    "title": "OUR TEAM",
+    "description": "",
+    "members": [
+      {
+        "name": "Harry J. Lee",
+        "role": "CEO / FOUNDER",
+        "image": "/assets/images/members/harry.png",
+        "bio": []
+      },
+      {
+        "name": "Jaehwan Kim",
+        "role": "CEO / FOUNDER",
+        "image": "/assets/images/members/kim_jh.webp",
+        "bio": []
+      },
+      {
+        "name": "Jungin Kim",
+        "role": "Security Engineer",
+        "image": "/assets/images/members/kim_km.jpg",
+        "bio": []
+      }
+    ]
+  }
+}

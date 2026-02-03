@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   // GitHub Pages 배포 시 경로 설정
   // 개발: '/' / 프로덕션: '/xaikorea-web/'
-  base: '/xaikorea-web/',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {

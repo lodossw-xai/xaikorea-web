@@ -1,0 +1,17 @@
+{
+  "name": "xaikorea-api",
+  "version": "1.0.0",
+  "description": "Netlify Functions for XAI Korea Contact Form",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build required for functions only'"
+  },
+  "dependencies": {
+    "resend": "^6.9.1"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.4.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}

@@ -1,0 +1,25 @@
+[build]
+  command = ""
+  publish = "netlify/public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"
+
+# CORS 허용을 위한 헤더 설정
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+# ─────────────────────────────────────────────────
+# 환경 변수 (Netlify Dashboard에서 설정)
+# ─────────────────────────────────────────────────
+# RESEND_API_KEY          - Resend API 키 (필수)
+# SENDER_EMAIL            - 발송 이메일 (기본값: noreply@xaikorea.ai.kr)
+# RECIPIENT_EMAIL         - 수신 이메일 (기본값: request@xaikorea.ai.kr)
+# RECAPTCHA_SECRET_KEY    - reCAPTCHA 비밀 키
+# ALLOWED_ORIGIN          - CORS 허용 도메인 (기본값: *)

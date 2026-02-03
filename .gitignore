@@ -49,3 +49,8 @@ public_html
 .antigravity
 .specify
 .playwright-mcp
+
+# Netlify Functions
+netlify/node_modules
+netlify/dist
+.netlify

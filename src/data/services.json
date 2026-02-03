@@ -1,0 +1,136 @@
+{
+  "ko": {
+    "title": {
+      "highlight": "RAG AI",
+      "main": "를 활용한<br/>정밀 세무 의견서 작성"
+    },
+    "description": "수천 페이지의 문서를 검색하는 수고를 덜어드립니다. AI가 필요한 조항과 판례를 즉시 찾아내어 전문가의 업무를 가속화합니다.",
+    "cards": [
+      {
+        "icon": "manage_search",
+        "title": "맥락 기반 검색",
+        "description": "단순 키워드가 아닌 세법의 맥락을 이해합니다. 모호한 질의에도 관련된 법령과 예규를 정확하게 찾아 매칭합니다.",
+        "isPopular": false
+      },
+      {
+        "icon": "auto_fix_high",
+        "title": "초안 자동 생성",
+        "description": "검색된 법령을 기반으로 고객 자문서 초안을 자동으로 작성합니다. 고품질 초안 작성으로 업무 시간을 90% 단축하세요.",
+        "isPopular": true,
+        "badge": "POPULAR"
+      },
+      {
+        "icon": "update",
+        "title": "실시간 법령 업데이트",
+        "description": "매일 변경되는 세법과 예규를 실시간으로 학습합니다. 절대 뒤처지지 않는 최신 법령 정보를 보장합니다.",
+        "isPopular": false
+      }
+    ],
+    "process": {
+      "title": {
+        "line1": "복잡한 세무 사례,",
+        "line2": "단 ",
+        "highlight": "3단계",
+        "line3": "로 해결하세요"
+      },
+      "description": "법전을 뒤적이기 전에 AI에게 먼저 물어보세요. 수만 페이지의 문서를 단 몇 초 만에 읽고 분석하는 유능한 주니어 어소시에이트를 고용하는 것과 같습니다.",
+      "steps": [
+        "사례 파일 업로드 (PDF/Doc)",
+        "분석 보고서 생성",
+        "검토 및 메모로 내보내기"
+      ]
+    },
+    "accuracy": {
+      "title": {
+        "line1": "전문가를 위한",
+        "highlight": "압도적 정확성"
+      },
+      "description": "중요한 의사결정 과정에 통합되기 위해 투명성과 해석 가능성은 필수입니다. TaxAI는 모든 주장에 대해 명확한 출처를 제공합니다.",
+      "features": [
+        {
+          "icon": "check_circle",
+          "title": "할루시네이션 제로 정책",
+          "description": "엄격한 제약 조건을 통해 제공된 법령 텍스트 내에서만 답변을 생성합니다."
+        },
+        {
+          "icon": "lock",
+          "title": "데이터 보안 보장",
+          "description": "민감한 클라이언트 데이터를 위한 온프레미스 구축 옵션을 지원합니다."
+        },
+        {
+          "icon": "history_edu",
+          "title": "감사 추적 (Audit Trail)",
+          "description": "세무 조언 도출에 사용된 논리와 근거를 투명하게 추적할 수 있습니다."
+        }
+      ],
+      "processing": "처리 중..."
+    }
+  },
+  "en": {
+    "title": {
+      "highlight": "RAG AI",
+      "main": "-Powered<br/>Precision Tax Opinions"
+    },
+    "description": "Save hours of searching through thousands of pages. AI instantly finds the relevant provisions and precedents to accelerate expert work.",
+    "cards": [
+      {
+        "icon": "manage_search",
+        "title": "Context-Based Search",
+        "description": "Understands tax law context, not just keywords. Accurately matches relevant statutes and rulings even for ambiguous queries.",
+        "isPopular": false
+      },
+      {
+        "icon": "auto_fix_high",
+        "title": "Auto Draft Generation",
+        "description": "Automatically creates client advisory drafts based on searched regulations. Reduce work time by 90% with high-quality drafts.",
+        "isPopular": true,
+        "badge": "POPULAR"
+      },
+      {
+        "icon": "update",
+        "title": "Real-time Law Updates",
+        "description": "Learns daily changes in tax laws and rulings in real-time. Guaranteed up-to-date legal information.",
+        "isPopular": false
+      }
+    ],
+    "process": {
+      "title": {
+        "line1": "Complex Tax Cases,",
+        "line2": "Solved in ",
+        "highlight": "3 Steps",
+        "line3": ""
+      },
+      "description": "Ask AI before flipping through law books. It's like hiring a capable junior associate who reads and analyzes tens of thousands of pages in seconds.",
+      "steps": [
+        "Upload Case File (PDF/Doc)",
+        "Generate Analysis Report",
+        "Review & Export as Notes"
+      ]
+    },
+    "accuracy": {
+      "title": {
+        "line1": "For Professionals,",
+        "highlight": "Overwhelming Accuracy"
+      },
+      "description": "Transparency and interpretability are essential for integration into important decision-making processes. XAI Korea provides clear sources for all claims.",
+      "features": [
+        {
+          "icon": "check_circle",
+          "title": "Zero Hallucination Policy",
+          "description": "Generates answers only within the provided legal text through strict constraints."
+        },
+        {
+          "icon": "lock",
+          "title": "Data Security Guaranteed",
+          "description": "Supports on-premise deployment options for sensitive client data."
+        },
+        {
+          "icon": "history_edu",
+          "title": "Audit Trail",
+          "description": "Transparently track the logic and grounds used to derive tax advice."
+        }
+      ],
+      "processing": "Processing..."
+    }
+  }
+}

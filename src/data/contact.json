@@ -1,0 +1,78 @@
+{
+  "ko": {
+    "title": "문의하기",
+    "description": "서비스 도입, 기술 제휴, 투자 관련 문의를 남겨주세요.\n담당자가 확인 후 24시간 이내에 답변 드립니다.",
+    "info": {
+      "address": {
+        "label": "본사 위치",
+        "value": "경기도 성남시 분당구 삼평동 판교로 289번길 20, 경기스타트업랩"
+      },
+      "phone": {
+        "label": "고객센터",
+        "value": "+82)10-3253-5409 (평일 09:00 - 18:00)"
+      },
+      "email": {
+        "label": "이메일",
+        "value": "contact@xaikorea.ai.kr"
+      }
+    },
+    "form": {
+      "name": "이름",
+      "namePlaceholder": "홍길동",
+      "company": "회사명",
+      "companyPlaceholder": "회사명 입력",
+      "email": "이메일",
+      "emailPlaceholder": "example@email.com",
+      "type": "문의 유형",
+      "typeOptions": [
+        { "value": "", "label": "서비스 도입 문의" },
+        { "value": "demo", "label": "제품 데모 요청" },
+        { "value": "pricing", "label": "가격 및 플랜 문의" },
+        { "value": "partnership", "label": "파트너십 제안" },
+        { "value": "other", "label": "기타 문의" }
+      ],
+      "message": "내용",
+      "messagePlaceholder": "문의하실 내용을 입력해주세요.",
+      "submit": "문의하기"
+    },
+    "mapButton": "지도 보기"
+  },
+  "en": {
+    "title": "Contact Us",
+    "description": "Leave your inquiries about service adoption, technical partnerships, or investments.\nOur team will respond within 24 hours.",
+    "info": {
+      "address": {
+        "label": "Headquarters",
+        "value": "20, Pangyo-ro 289beon-gil, Sampyeong-dong, Bundang-gu, Seongnam-si, Gyeonggi-do,Republic of Korea"
+      },
+      "phone": {
+        "label": "Customer Service",
+        "value": "+82)10-3253-5409 (Weekdays 09:00 - 18:00)"
+      },
+      "email": {
+        "label": "Email",
+        "value": "contact@xaikorea.ai.kr"
+      }
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "John Doe",
+      "company": "Company",
+      "companyPlaceholder": "Enter company name",
+      "email": "Email",
+      "emailPlaceholder": "example@email.com",
+      "type": "Inquiry Type",
+      "typeOptions": [
+        { "value": "", "label": "Service Adoption" },
+        { "value": "demo", "label": "Product Demo Request" },
+        { "value": "pricing", "label": "Pricing & Plans" },
+        { "value": "partnership", "label": "Partnership Proposal" },
+        { "value": "other", "label": "Other Inquiries" }
+      ],
+      "message": "Message",
+      "messagePlaceholder": "Please enter your inquiry.",
+      "submit": "Submit"
+    },
+    "mapButton": "View Map"
+  }
+}

@@ -1,15 +1,134 @@
 /**
- * Landing Page - TaxAI One Page Template
+ * Landing Page - XAI Korea One Page Template
  * Constitution I: Functional Component
  * Based on html/code.html design
  */
 import type { ReactElement } from 'react';
-import { useEffect, useState } from 'react';
-import useI18n from '../hooks/useI18n';
+import { useEffect, useRef, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { Link } from 'react-router-dom';
+import { useLocalizedData } from '../hooks/useLocalizedData';
+import useLanguageStore from '../store/languageStore';
+
+// Netlify Functions API URL (set in .env as VITE_CONTACT_API_URL)
+// Example: https://your-netlify-site.netlify.app/.netlify/functions/submit-contact
+const CONTACT_API_URL = import.meta.env.VITE_CONTACT_API_URL || '';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+
+interface ContactFormData {
+  name: string;
+  company: string;
+  email: string;
+  inquiryType: string;
+  message: string;
+  timestamp: string;
+  captchaToken?: string | null;
+}
 
 function LandingPage(): ReactElement {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t, language, setLanguage } = useI18n();
+  const { language, setLanguage } = useLanguageStore();
+  const data = useLocalizedData();
+
+  // Contact form state
+  const [formData, setFormData] = useState<ContactFormData>({
+    name: '',
+    company: '',
+    email: '',
+    inquiryType: 'service',
+    message: '',
+    timestamp: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error' | 'captcha-required'
+  >('idle');
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  // Reset captcha-required status when captcha is completed
+  useEffect(() => {
+    if (captchaToken && submitStatus === 'captcha-required') {
+      setSubmitStatus('idle');
+    }
+  }, [captchaToken, submitStatus]);
+
+  // Handle form input changes
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle form submission to Google Sheets
+  const handleFormSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+
+    if (!CONTACT_API_URL) {
+      console.error('Contact API URL is not configured');
+      setSubmitStatus('error');
+      return;
+    }
+
+    // Only validate captcha if the site key is configured
+    if (RECAPTCHA_SITE_KEY && !captchaToken) {
+      setSubmitStatus('captcha-required');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const submitData = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+      };
+
+      const response = await fetch(CONTACT_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...submitData, captchaToken }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          company: '',
+          email: '',
+          inquiryType: 'service',
+          message: '',
+          timestamp: '',
+        });
+        setCaptchaToken(null);
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+      } else {
+        throw new Error(result.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Initialize dark mode state from current DOM state
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -47,11 +166,18 @@ function LandingPage(): ReactElement {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-              <span className="material-symbols-outlined text-4xl text-black dark:text-primary">
-                auto_graph
-              </span>
+              <img
+                src="/assets/images/logo/logo-light.png"
+                alt="XAI Korea Logo"
+                className="h-12 w-auto dark:hidden"
+              />
+              <img
+                src="/assets/images/logo/logo-dark.png"
+                alt="XAI Korea Logo"
+                className="h-12 w-auto hidden dark:block"
+              />
               <span className="font-display font-bold text-2xl tracking-tight text-gray-900 dark:text-white">
-                Tax<span className="text-primary">AI</span>
+                XAI <span className="text-primary">Korea</span>
               </span>
             </div>
 
@@ -60,25 +186,25 @@ function LandingPage(): ReactElement {
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#home"
               >
-                {t('nav.home')}
+                {data.navigation.nav.home}
               </a>
               <a
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#services"
               >
-                {t('nav.services')}
-              </a>
-              <a
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
-                href="#advisors"
-              >
-                {t('nav.advisors')}
+                {data.navigation.nav.services}
               </a>
               <a
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
                 href="#team"
               >
-                {t('nav.team')}
+                {data.navigation.nav.team}
+              </a>
+              <a
+                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
+                href="#advisors"
+              >
+                {data.navigation.nav.advisors}
               </a>
 
               <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full px-1 py-1">
@@ -108,7 +234,7 @@ function LandingPage(): ReactElement {
                 className="bg-primary hover:bg-primary-hover text-black font-bold py-2.5 px-6 rounded-lg transition shadow-lg shadow-yellow-500/20"
                 href="#contact"
               >
-                {t('nav.contact')}
+                {data.navigation.nav.contact}
               </a>
 
               <button
@@ -150,28 +276,28 @@ function LandingPage(): ReactElement {
               href="#home"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.home')}
+              {data.navigation.nav.home}
             </a>
             <a
               className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
               href="#services"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.services')}
-            </a>
-            <a
-              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
-              href="#advisors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {t('nav.advisors')}
+              {data.navigation.nav.services}
             </a>
             <a
               className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
               href="#team"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.team')}
+              {data.navigation.nav.team}
+            </a>
+            <a
+              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
+              href="#advisors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {data.navigation.nav.advisors}
             </a>
 
             <div className="flex items-center justify-center gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -217,7 +343,7 @@ function LandingPage(): ReactElement {
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.contact')}
+              {data.navigation.nav.contact}
             </a>
           </div>
         </div>
@@ -267,21 +393,21 @@ function LandingPage(): ReactElement {
                 <span className="material-symbols-outlined text-sm animate-pulse">
                   hub
                 </span>
-                <span>{t('hero.badge')}</span>
+                <span>{data.hero.badge}</span>
               </div>
 
               <h1 className="font-display font-extrabold text-5xl lg:text-7xl text-gray-900 dark:text-white leading-tight mb-8">
-                {t('hero.title1')}
+                {data.hero.title.line1}
                 <br />
                 <span className="relative inline-block">
                   <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-ai-blue to-ai-green">
-                    {t('hero.title2')}
+                    {data.hero.title.line2}
                   </span>
                 </span>
               </h1>
 
               <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-lg leading-relaxed keep-all">
-                {t('hero.description')}
+                {data.hero.description}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -289,7 +415,7 @@ function LandingPage(): ReactElement {
                   className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-black font-bold text-lg py-4 px-8 rounded-lg transition shadow-xl shadow-yellow-500/20 group"
                   href="#contact"
                 >
-                  {t('hero.cta_demo')}
+                  {data.hero.cta.primary}
                   <span className="material-symbols-outlined group-hover:translate-x-1 transition">
                     arrow_forward
                   </span>
@@ -299,7 +425,7 @@ function LandingPage(): ReactElement {
                   href="#services"
                 >
                   <span className="material-symbols-outlined">play_circle</span>
-                  소개 영상 보기
+                  {data.hero.cta.secondary}
                 </a>
               </div>
             </div>
@@ -399,38 +525,6 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* Partners Section */}
-      <section className="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-black/40 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-8">
-            업계 최고의 파트너들과 함께합니다
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">account_balance</span>{' '}
-              TaxCorp
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">analytics</span>{' '}
-              AuditFlow
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">gavel</span> LegalAI
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">
-                assured_workload
-              </span>{' '}
-              TrustTax
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">calculate</span>{' '}
-              CPAMate
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Services Section */}
       <section
         className="py-24 bg-surface-light dark:bg-background-dark"
@@ -439,66 +533,52 @@ function LandingPage(): ReactElement {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-6 leading-snug reveal-text">
-              <span className="text-ai-blue">RAG AI</span>를 활용한
-              <br /> 정밀 세무 의견서 작성
+              <span className="text-ai-blue">
+                {data.services.title.highlight}
+              </span>
+              <span
+                dangerouslySetInnerHTML={{ __html: data.services.title.main }}
+              />
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-lg keep-all">
-              수천 페이지의 문서를 검색하는 수고를 덜어드립니다. AI가 필요한
-              조항과 판례를 즉시 찾아내어 전문가의 업무를 가속화합니다.
+              {data.services.description}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Service Card 1 */}
-            <div className="interactive-card bg-white dark:bg-surface-dark p-8 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition group h-full">
-              <div className="w-14 h-14 bg-primary/20 dark:bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-primary text-3xl">
-                  manage_search
-                </span>
+            {data.services.cards.map((card, index) => (
+              <div
+                key={index}
+                className={`interactive-card p-8 rounded-2xl transition group h-full ${
+                  card.isPopular
+                    ? 'bg-gradient-to-br from-white to-gray-50 dark:from-surface-dark dark:to-black border-2 border-primary shadow-xl relative overflow-hidden'
+                    : 'bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:border-primary dark:hover:border-primary'
+                }`}
+              >
+                {card.isPopular && card.badge && (
+                  <div className="absolute top-0 right-0 bg-primary text-xs font-bold px-3 py-1 rounded-bl-lg text-black">
+                    {card.badge}
+                  </div>
+                )}
+                <div
+                  className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ${
+                    card.isPopular
+                      ? 'bg-black dark:bg-gray-800'
+                      : 'bg-primary/20 dark:bg-primary/10'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-primary text-3xl">
+                    {card.icon}
+                  </span>
+                </div>
+                <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-3">
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed keep-all">
+                  {card.description}
+                </p>
               </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-3">
-                맥락 기반 검색
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed keep-all">
-                단순 키워드가 아닌 세법의 맥락을 이해합니다. 모호한 질의에도
-                관련된 법령과 예규를 정확하게 찾아 매칭합니다.
-              </p>
-            </div>
-
-            {/* Service Card 2 - Popular */}
-            <div className="interactive-card bg-gradient-to-br from-white to-gray-50 dark:from-surface-dark dark:to-black p-8 rounded-2xl border-2 border-primary shadow-xl relative overflow-hidden group h-full">
-              <div className="absolute top-0 right-0 bg-primary text-xs font-bold px-3 py-1 rounded-bl-lg text-black">
-                POPULAR
-              </div>
-              <div className="w-14 h-14 bg-black dark:bg-gray-800 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-primary text-3xl">
-                  auto_fix_high
-                </span>
-              </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-3">
-                초안 자동 생성
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed keep-all">
-                검색된 법령을 기반으로 고객 자문서 초안을 자동으로 작성합니다.
-                고품질 초안 작성으로 업무 시간을 90% 단축하세요.
-              </p>
-            </div>
-
-            {/* Service Card 3 */}
-            <div className="interactive-card bg-white dark:bg-surface-dark p-8 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition group h-full">
-              <div className="w-14 h-14 bg-primary/20 dark:bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-primary text-3xl">
-                  update
-                </span>
-              </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-3">
-                실시간 법령 업데이트
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed keep-all">
-                매일 변경되는 세법과 예규를 실시간으로 학습합니다. 절대 뒤처지지
-                않는 최신 법령 정보를 보장합니다.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -513,7 +593,7 @@ function LandingPage(): ReactElement {
                 <img
                   alt="Accountant analyzing data"
                   className="w-full rounded-2xl grayscale hover:grayscale-0 transition duration-500"
-                  src="https://images.unsplash.com/photo-1554224311-beee4ece0933?w=800&h=600&fit=crop"
+                  src="/assets/images/main/processing_01.png"
                 />
               </div>
             </div>
@@ -525,44 +605,53 @@ function LandingPage(): ReactElement {
                 </span>
               </div>
               <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-6 leading-tight reveal-text">
-                복잡한 세무 사례,
-                <br />단 <span className="text-ai-green">3단계</span>로
-                해결하세요
+                {data.services.process.title.line1}
+                <br />
+                {data.services.process.title.line2}
+                <span className="text-ai-green">
+                  {data.services.process.title.highlight}
+                </span>
+                {data.services.process.title.line3}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg mb-10 keep-all">
-                법전을 뒤적이기 전에 AI에게 먼저 물어보세요. 수만 페이지의
-                문서를 단 몇 초 만에 읽고 분석하는 유능한 주니어 어소시에이트를
-                고용하는 것과 같습니다.
+                {data.services.process.description}
               </p>
 
               <ul className="space-y-6">
-                <li className="flex items-center gap-6 p-4 rounded-xl bg-surface-light dark:bg-background-dark border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                  <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold text-lg">
-                    1
-                  </span>
-                  <span className="font-bold text-lg text-gray-800 dark:text-gray-200">
-                    사례 파일 업로드 (PDF/Doc)
-                  </span>
-                </li>
-                <li className="flex items-center gap-6 p-4 rounded-xl bg-primary shadow-xl transform translate-x-4">
-                  <span className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold text-lg">
-                    2
-                  </span>
-                  <span className="font-bold text-lg text-black">
-                    분석 보고서 생성
-                  </span>
-                  <span className="ml-auto material-symbols-outlined text-black">
-                    arrow_forward
-                  </span>
-                </li>
-                <li className="flex items-center gap-6 p-4 rounded-xl bg-surface-light dark:bg-background-dark border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                  <span className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold text-lg">
-                    3
-                  </span>
-                  <span className="font-bold text-lg text-gray-800 dark:text-gray-200">
-                    검토 및 메모로 내보내기
-                  </span>
-                </li>
+                {data.services.process.steps.map((step, index) => (
+                  <li
+                    key={index}
+                    className={`flex items-center gap-6 p-4 rounded-xl ${
+                      index === 1
+                        ? 'bg-primary shadow-xl transform translate-x-4'
+                        : 'bg-surface-light dark:bg-background-dark border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition'
+                    }`}
+                  >
+                    <span
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+                        index === 1
+                          ? 'bg-white text-black'
+                          : 'bg-black text-white'
+                      }`}
+                    >
+                      {index + 1}
+                    </span>
+                    <span
+                      className={`font-bold text-lg ${
+                        index === 1
+                          ? 'text-black'
+                          : 'text-gray-800 dark:text-gray-200'
+                      }`}
+                    >
+                      {step}
+                    </span>
+                    {index === 1 && (
+                      <span className="ml-auto material-symbols-outlined text-black">
+                        arrow_forward
+                      </span>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -571,66 +660,34 @@ function LandingPage(): ReactElement {
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2">
               <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-6 leading-tight reveal-text">
-                전문가를 위한
+                {data.services.accuracy.title.line1}
                 <br />
-                <span className="text-ai-blue">압도적 정확성</span>
+                <span className="text-ai-blue">
+                  {data.services.accuracy.title.highlight}
+                </span>
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg mb-10 keep-all">
-                중요한 의사결정 과정에 통합되기 위해 투명성과 해석 가능성은
-                필수입니다. TaxAI는 모든 주장에 대해 명확한 출처를 제공합니다.
+                {data.services.accuracy.description}
               </p>
 
               <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
-                      check_circle
-                    </span>
+                {data.services.accuracy.features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
+                      <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
+                        {feature.icon}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
+                        {feature.title}
+                      </h4>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-                      할루시네이션 제로 정책
-                    </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      엄격한 제약 조건을 통해 제공된 법령 텍스트 내에서만 답변을
-                      생성합니다.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
-                      lock
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-                      데이터 보안 보장
-                    </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      민감한 클라이언트 데이터를 위한 온프레미스 구축 옵션을
-                      지원합니다.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xl">
-                      history_edu
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-                      감사 추적 (Audit Trail)
-                    </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      세무 조언 도출에 사용된 논리와 근거를 투명하게 추적할 수
-                      있습니다.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -647,7 +704,7 @@ function LandingPage(): ReactElement {
                       <span className="material-symbols-outlined animate-spin">
                         sync
                       </span>
-                      Processing...
+                      {data.services.accuracy.processing}
                     </span>
                   </div>
                   <div className="col-span-2 h-32 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
@@ -659,10 +716,59 @@ function LandingPage(): ReactElement {
                 <img
                   alt="Data processing"
                   className="absolute -bottom-10 -left-10 w-40 h-40 object-cover rounded-full border-4 border-white dark:border-gray-800 shadow-lg"
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&h=200&fit=crop"
+                  src="/assets/images/main/processing.png"
                 />
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section
+        className="py-24 bg-surface-light dark:bg-background-dark"
+        id="team"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <span className="text-ai-blue text-sm font-bold tracking-widest uppercase mb-4 block">
+              {data.team.badge}
+            </span>
+            <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">
+              {data.team.title}
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+              {data.team.description}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {data.team.members.map((member, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-surface-dark rounded-2xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300"
+              >
+                <div className="relative w-32 h-32 mx-auto mb-6">
+                  <img
+                    alt={member.name}
+                    className="w-32 h-32 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500 border-4 border-gray-100 dark:border-gray-700"
+                    src={member.image}
+                  />
+                </div>
+                <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
+                  {member.name}
+                </h3>
+                <p className="text-ai-blue text-sm font-semibold uppercase tracking-wide mb-4">
+                  {member.role}
+                </p>
+                <div className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed space-y-1">
+                  {member.bio.map((line, bioIndex) => (
+                    <p key={bioIndex}>{line}</p>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -674,263 +780,53 @@ function LandingPage(): ReactElement {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-16 reveal-text">
-            <span className="text-ai-blue">최고의 전문가</span>들과 함께합니다
+            <span className="text-ai-blue">
+              {data.advisors.title.highlight}
+            </span>
+            {data.advisors.title.main}
           </h2>
         </div>
 
         {/* Rolling Banner Container */}
         <div className="relative">
           {/* Gradient Overlay - Left */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
           {/* Gradient Overlay - Right */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
 
           {/* Scrolling Track */}
-          <div
-            className="flex gap-6 hover:[animation-play-state:paused]"
-            style={{
-              animation: 'scrollLeft 30s linear infinite',
-              width: 'max-content',
-            }}
-          >
+          <div className="flex gap-6 scroll-track">
             {/* Original Cards + Duplicates for seamless loop */}
             {[...Array(2)].map((_, setIndex) => (
               <div key={setIndex} className="flex gap-6">
-                {/* Advisor 1 */}
-                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
-                    "
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
-                    "국제 조세 조약과 국내법을 즉시 교차 검증할 수 있는 기능은
-                    국경 간 컨설팅 업무의 게임 체인저입니다."
-                  </p>
-                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
-                    <img
-                      alt="Advisor"
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                      src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop"
-                    />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">
-                        제임스 김
+                {data.advisors.items.map((advisor, index) => (
+                  <div
+                    key={index}
+                    className="w-[220px] shrink-0 bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative hover:shadow-lg hover:border-primary dark:hover:border-primary transition-all duration-300 group"
+                  >
+                    {advisor.isHead && (
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-black px-3 py-0.5 text-[10px] font-bold rounded-full shadow-md whitespace-nowrap">
+                        HEAD ADVISOR
+                      </div>
+                    )}
+                    <div className="flex flex-col items-center text-center">
+                      <img
+                        alt={advisor.name}
+                        className="w-20 h-20 rounded-full object-cover ring-3 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary mb-4 transition-all duration-300"
+                        src={advisor.image}
+                      />
+                      <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
+                        {advisor.name}
                       </h4>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                        전 국세청 국장
-                      </p>
+                      <p
+                        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                        dangerouslySetInnerHTML={{ __html: advisor.role }}
+                      />
                     </div>
                   </div>
-                </div>
-
-                {/* Advisor 2 - Head Advisor */}
-                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative">
-                  <div className="absolute -top-3 right-8 bg-black text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">
-                    HEAD ADVISOR
-                  </div>
-                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
-                    "
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
-                    "TaxAI 도입 후 사전 리서치 시간이 70% 단축되었습니다. 주니어
-                    회계사들이 단순 반복 작업 대신 전략 수립에 집중할 수 있게
-                    되었습니다."
-                  </p>
-                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
-                    <img
-                      alt="Advisor"
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop"
-                    />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">
-                        사라 이
-                      </h4>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                        Big 4 파트너 회계사
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Advisor 3 */}
-                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
-                    "
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
-                    "우리 분야에서 정확성은 생명입니다. 모든 답변에 명확한 인용
-                    출처가 제공되니 안심하고 자문에 활용할 수 있습니다."
-                  </p>
-                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
-                    <img
-                      alt="Advisor"
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                    />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">
-                        데이비드 박
-                      </h4>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                        세법학 교수
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Advisor 4 - Additional */}
-                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
-                    "
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
-                    "복잡한 세무 쟁점에 대한 AI의 분석력이 인상적입니다.
-                    클라이언트에게 더 빠르고 정확한 조언을 제공할 수 있게
-                    되었습니다."
-                  </p>
-                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
-                    <img
-                      alt="Advisor"
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                      src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop"
-                    />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">
-                        마이클 정
-                      </h4>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                        국제 조세 전문 변호사
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Advisor 5 - Additional */}
-                <div className="w-[400px] flex-shrink-0 bg-white dark:bg-surface-dark p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                  <div className="text-primary text-5xl mb-2 font-serif opacity-50">
-                    "
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic relative z-10 keep-all text-sm leading-relaxed">
-                    "스타트업부터 대기업까지, 다양한 규모의 기업에 맞춤형 세무
-                    솔루션을 제공할 수 있어 업무 효율이 크게 향상되었습니다."
-                  </p>
-                  <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-700 pt-4">
-                    <img
-                      alt="Advisor"
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-surface-dark"
-                      src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop"
-                    />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">
-                        수진 최
-                      </h4>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                        공인회계사
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-24 bg-white dark:bg-background-dark" id="team">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div>
-              <h2 className="font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-3 reveal-text">
-                <span className="text-ai-blue">팀 소개</span>
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
-                AI 전문가와 세무 전문가가 함께 만듭니다.
-              </p>
-            </div>
-            <a
-              className="hidden md:flex items-center text-primary font-bold hover:underline group"
-              href="#contact"
-            >
-              인재 채용{' '}
-              <span className="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition">
-                arrow_forward
-              </span>
-            </a>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-            {/* Team Member 1 */}
-            <div className="text-center group">
-              <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-primary rounded-2xl rotate-6 group-hover:rotate-12 transition duration-300"></div>
-                <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop"
-                />
-              </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                최민준
-              </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                CEO / Founder
-              </p>
-            </div>
-
-            {/* Team Member 2 */}
-            <div className="text-center group">
-              <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-2xl -rotate-3 group-hover:-rotate-6 transition duration-300"></div>
-                <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
-                />
-              </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                송지은
-              </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                CTO
-              </p>
-            </div>
-
-            {/* Team Member 3 */}
-            <div className="text-center group">
-              <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-2xl rotate-3 group-hover:rotate-6 transition duration-300"></div>
-                <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop"
-                />
-              </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                알렉스 첸
-              </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Head of AI
-              </p>
-            </div>
-
-            {/* Team Member 4 */}
-            <div className="text-center group">
-              <div className="relative w-32 h-32 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-2xl -rotate-6 group-hover:-rotate-12 transition duration-300"></div>
-                <img
-                  alt="Team Member"
-                  className="relative w-32 h-32 rounded-2xl object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop"
-                />
-              </div>
-              <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                김하나
-              </h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Lead CPA
-              </p>
-            </div>
           </div>
         </div>
       </section>
@@ -939,22 +835,25 @@ function LandingPage(): ReactElement {
       <section className="py-24 bg-yellow-50 dark:bg-yellow-900/10 border-y border-yellow-100 dark:border-yellow-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-display font-extrabold text-3xl md:text-5xl text-gray-900 dark:text-white mb-6 leading-tight reveal-text">
-            나만의 <span className="text-ai-blue">AI 세무 비서</span>를
+            {data.navigation.cta.title.line1}
+            <span className="text-ai-blue">
+              {data.navigation.cta.title.highlight}
+            </span>
+            {data.navigation.cta.title.line2}
             <br />
-            만날 준비가 되셨나요?
+            {data.navigation.cta.title.line3}
           </h2>
           <p className="text-gray-600 dark:text-gray-300 text-lg mb-12">
-            이미 500개 이상의 회계법인이 TaxAI를 통해 업무 효율을 극대화하고
-            있습니다.
+            {data.navigation.cta.description}
           </p>
 
           <div className="bg-primary rounded-2xl p-8 md:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group">
             <div className="relative z-10 text-left">
               <h3 className="font-bold text-2xl text-black mb-2">
-                엔터프라이즈 플랜
+                {data.navigation.cta.enterprise.title}
               </h3>
               <p className="text-black/80 font-medium">
-                맞춤형 LLM 학습 & 온프레미스 구축 지원
+                {data.navigation.cta.enterprise.description}
               </p>
             </div>
             <div className="relative z-10 w-full md:w-auto">
@@ -962,7 +861,7 @@ function LandingPage(): ReactElement {
                 className="block text-center bg-black hover:bg-gray-800 text-white font-bold py-4 px-10 rounded-xl transition border border-transparent hover:border-gray-600 shadow-lg"
                 href="#contact"
               >
-                영업팀 문의하기
+                {data.navigation.cta.enterprise.button}
               </a>
             </div>
             <div className="absolute -right-6 -bottom-6 opacity-10 pointer-events-none transform group-hover:scale-110 transition duration-700">
@@ -974,151 +873,178 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Section
       <section className="py-24 bg-surface-light dark:bg-background-dark">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display font-extrabold text-3xl text-center text-gray-900 dark:text-white mb-16 reveal-text">
-            자주 묻는 <span className="text-ai-green">질문</span>
+            {data.faq.title.text}
+            <span className="text-ai-green">{data.faq.title.highlight}</span>
           </h2>
 
           <div className="space-y-4">
-            {/* FAQ 1 */}
-            <details className="group bg-white dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
-              <summary className="flex justify-between items-center p-6 cursor-pointer list-none select-none">
-                <span className="font-bold text-lg text-gray-900 dark:text-white">
-                  고객 프로젝트에 TaxAI를 사용할 수 있나요?
-                </span>
-                <span className="transition-transform duration-300 group-open:rotate-180 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
-                  <span className="material-symbols-outlined text-gray-500">
-                    keyboard_arrow_down
+            {data.faq.items.map((item, index) => (
+              <details
+                key={index}
+                className="group bg-white dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm"
+              >
+                <summary className="flex justify-between items-center p-6 cursor-pointer list-none select-none">
+                  <span className="font-bold text-lg text-gray-900 dark:text-white">
+                    {item.question}
                   </span>
-                </span>
-              </summary>
-              <div className="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
-                네, 가능합니다. TaxAI는 고객에게 전달할 결과물의 초안 작성과
-                리서치를 돕기 위해 설계되었습니다. 단, 최종 결과물은 반드시
-                자격을 갖춘 전문가의 검토를 거쳐야 합니다.
-              </div>
-            </details>
-
-            {/* FAQ 2 */}
-            <details className="group bg-white dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
-              <summary className="flex justify-between items-center p-6 cursor-pointer list-none select-none">
-                <span className="font-bold text-lg text-gray-900 dark:text-white">
-                  데이터는 안전한가요?
-                </span>
-                <span className="transition-transform duration-300 group-open:rotate-180 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
-                  <span className="material-symbols-outlined text-gray-500">
-                    keyboard_arrow_down
+                  <span className="transition-transform duration-300 group-open:rotate-180 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
+                    <span className="material-symbols-outlined text-gray-500">
+                      keyboard_arrow_down
+                    </span>
                   </span>
-                </span>
-              </summary>
-              <div className="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
-                저희는 SOC 2 Type II 표준을 준수합니다. 모든 데이터는 전송 및
-                저장 시 암호화됩니다. 엔터프라이즈 고객을 위한 프라이빗 클라우드
-                구축 옵션도 제공하고 있습니다.
-              </div>
-            </details>
-
-            {/* FAQ 3 */}
-            <details className="group bg-white dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
-              <summary className="flex justify-between items-center p-6 cursor-pointer list-none select-none">
-                <span className="font-bold text-lg text-gray-900 dark:text-white">
-                  지원되는 국가 및 법령은 어디인가요?
-                </span>
-                <span className="transition-transform duration-300 group-open:rotate-180 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
-                  <span className="material-symbols-outlined text-gray-500">
-                    keyboard_arrow_down
-                  </span>
-                </span>
-              </summary>
-              <div className="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
-                현재 대한민국 전역의 국세, 지방세 및 판례를 지원하며, 미국 연방
-                세법도 베타 서비스 중입니다. EU VAT 규정은 올해 4분기에 추가될
-                예정입니다.
-              </div>
-            </details>
+                </summary>
+                <div className="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {item.answer}
+                </div>
+              </details>
+            ))}
           </div>
+        </div>
+      </section>
+       */}
+
+      {/* Partners Section - Rolling Banner */}
+      <section className="py-12 bg-white dark:bg-black/40 border-y border-gray-100 dark:border-gray-800 overflow-hidden">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+          <p className="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+            업계 최고의 파트너들과 함께합니다
+          </p>
+        </div> */}
+        <div className="relative">
+          {/* Gradient Overlay - Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-white dark:from-[#0B1120] to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient Overlay - Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-white dark:from-[#0B1120] to-transparent z-10 pointer-events-none"></div>
+
+          {/* Partners List */}
+          {(() => {
+            const partners = [
+              { name: 'TaxCorp', icon: 'account_balance' },
+              { name: 'AuditFlow', icon: 'analytics' },
+              { name: 'LegalAI', icon: 'gavel' },
+              { name: 'TrustTax', icon: 'assured_workload' },
+            ];
+
+            const rollDesktop = partners.length > 5;
+            const rollMobile = partners.length > 2;
+
+            return (
+              <div
+                className={`flex gap-16 ${
+                  rollDesktop
+                    ? 'scroll-track'
+                    : rollMobile
+                      ? 'max-md:scroll-track md:justify-center md:w-full md:animate-none'
+                      : 'justify-center w-full'
+                }`}
+              >
+                {[...Array(rollDesktop || rollMobile ? 2 : 1)].map(
+                  (_, setIndex) => (
+                    <div
+                      key={setIndex}
+                      className={`flex gap-16 items-center ${
+                        !rollDesktop && setIndex === 1 ? 'md:hidden' : ''
+                      } ${!rollMobile && setIndex === 1 ? 'max-md:hidden' : ''}`}
+                    >
+                      {partners.map((partner, pIndex) => (
+                        <div
+                          key={`${setIndex}-${pIndex}`}
+                          className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default shrink-0"
+                        >
+                          <span className="material-symbols-outlined">
+                            {partner.icon}
+                          </span>{' '}
+                          {partner.name}
+                        </div>
+                      ))}
+                    </div>
+                  )
+                )}
+              </div>
+            );
+          })()}
         </div>
       </section>
 
       {/* Contact Section */}
       <section className="bg-hero-dark text-white py-20" id="contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="grid lg:grid-cols-2 gap-12 items-stretch">
             {/* Left - Header & Company Info & Map */}
-            <div>
+            <div className="flex flex-col">
               {/* Section Header */}
               <div className="mb-10">
                 <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
-                  문의하기
+                  {data.contact.title}
                 </h2>
-                <p className="text-gray-400 max-w-xl">
-                  서비스 도입, 기술 제휴, 투자 관련 문의를 남겨주세요.
-                  <br />
-                  담당자가 확인 후 24시간 이내에 답변 드립니다.
+                <p className="text-gray-400 max-w-xl whitespace-pre-line">
+                  {data.contact.description}
                 </p>
               </div>
 
               <div className="space-y-6">
                 {/* Address */}
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
                     <span className="material-symbols-outlined text-primary text-xl">
                       location_on
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-bold text-white mb-1">본사 위치</h4>
+                    <h4 className="font-bold text-white mb-1">
+                      {data.contact.info.address.label}
+                    </h4>
                     <p className="text-gray-400 text-sm">
-                      서울특별시 강남구 테헤란로 123, 15층 XAI Tower
+                      {data.contact.info.address.value}
                     </p>
                   </div>
                 </div>
 
                 {/* Phone */}
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
                     <span className="material-symbols-outlined text-primary text-xl">
                       call
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-bold text-white mb-1">고객센터</h4>
+                    <h4 className="font-bold text-white mb-1">
+                      {data.contact.info.phone.label}
+                    </h4>
                     <p className="text-gray-400 text-sm">
-                      02-1234-5678 (평일 09:00 - 18:00)
+                      {data.contact.info.phone.value}
                     </p>
                   </div>
                 </div>
 
                 {/* Email */}
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
                     <span className="material-symbols-outlined text-primary text-xl">
                       mail
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-bold text-white mb-1">이메일</h4>
+                    <h4 className="font-bold text-white mb-1">
+                      {data.contact.info.email.label}
+                    </h4>
                     <p className="text-gray-400 text-sm">
-                      contact@xaikorea.com
+                      {data.contact.info.email.value}
                     </p>
                   </div>
                 </div>
 
-                {/* Map Placeholder - Google Map will be integrated */}
-                <div className="mt-8">
-                  <div className="bg-gray-800 rounded-2xl overflow-hidden h-[250px] relative">
-                    {/* Google Map iframe - Uses embed (no API key required) */}
-                    {/* For JavaScript API, use: import.meta.env.VITE_GOOGLE_MAPS_API_KEY */}
+                {/* Map - Google Map Embed */}
+                <div className="mt-8 flex-1 flex flex-col">
+                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[250px] relative">
                     <iframe
-                      src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8'}&q=서울특별시+강남구+테헤란로+123&zoom=15&language=ko`}
-                      width="100%"
-                      height="100%"
-                      style={{
-                        border: 0,
-                        filter: 'grayscale(100%) invert(92%) contrast(83%)',
-                      }}
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.38843992964!2d127.10338097788475!3d37.40429267208111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca7c1a2dd176b%3A0xf609789d0ae4d6b0!2z6rK96riwIOyKpO2DgO2KuOyXheueqSjqsr3quLDquIDroZzrsozqsozsnoTshLzthLAp!5e0!3m2!1sko!2skr!4v1767659706880!5m2!1sko!2skr"
+                      className="absolute inset-0 w-full h-full"
+                      style={{ border: 0 }}
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
@@ -1126,15 +1052,15 @@ function LandingPage(): ReactElement {
                     ></iframe>
                     {/* Map overlay button */}
                     <a
-                      href="https://maps.google.com/?q=서울특별시+강남구+테헤란로+123"
+                      href="https://maps.google.com/?q=경기도+성남시+분당구+판교로+289번길+20"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black transition"
+                      className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black transition z-10"
                     >
                       <span className="material-symbols-outlined text-sm">
                         map
                       </span>
-                      지도 보기
+                      {data.contact.mapButton}
                     </a>
                   </div>
                 </div>
@@ -1142,74 +1068,191 @@ function LandingPage(): ReactElement {
             </div>
 
             {/* Right - Contact Form */}
-            <div className="bg-background-dark p-8 rounded-2xl border border-gray-800">
-              <form className="space-y-5">
+            <div className="bg-background-dark p-8 rounded-2xl border border-gray-800 flex flex-col">
+              <form
+                className="space-y-5 flex flex-col flex-1"
+                onSubmit={handleFormSubmit}
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-400 text-sm mb-2">
-                      이름
+                      {data.contact.form.name}
                     </label>
                     <input
                       className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
-                      placeholder="홍길동"
+                      placeholder={data.contact.form.namePlaceholder}
                       type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-gray-400 text-sm mb-2">
-                      회사명
+                      {data.contact.form.company}
                     </label>
                     <input
                       className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
-                      placeholder="회사명 입력"
+                      placeholder={data.contact.form.companyPlaceholder}
                       type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-gray-400 text-sm mb-2">
-                    이메일
+                    {data.contact.form.email}
                   </label>
                   <input
                     className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
-                    placeholder="example@email.com"
+                    placeholder={data.contact.form.emailPlaceholder}
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
                 <div>
                   <label className="block text-gray-400 text-sm mb-2">
-                    문의 유형
+                    {data.contact.form.type}
                   </label>
-                  <select className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition appearance-none cursor-pointer">
-                    <option value="">서비스 도입 문의</option>
-                    <option value="demo">제품 데모 요청</option>
-                    <option value="pricing">가격 및 플랜 문의</option>
-                    <option value="partnership">파트너십 제안</option>
-                    <option value="other">기타 문의</option>
+                  <select
+                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition appearance-none cursor-pointer"
+                    name="inquiryType"
+                    value={formData.inquiryType}
+                    onChange={handleInputChange}
+                  >
+                    {data.contact.form.typeOptions.map((option, index) => (
+                      <option key={index} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
-                <div>
+                <div className="flex-1 flex flex-col">
                   <label className="block text-gray-400 text-sm mb-2">
-                    내용
+                    {data.contact.form.message}
                   </label>
                   <textarea
-                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
-                    placeholder="문의하실 내용을 입력해주세요."
-                    rows={4}
+                    className="w-full flex-1 min-h-[100px] bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
+                    placeholder={data.contact.form.messagePlaceholder}
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required
                   ></textarea>
                 </div>
 
+                {/* reCAPTCHA */}
+                {RECAPTCHA_SITE_KEY && (
+                  <div className="space-y-2">
+                    <label className="block text-gray-400 text-sm">
+                      {language === 'ko'
+                        ? '보안 인증'
+                        : 'Security Verification'}
+                    </label>
+                    <div
+                      className={`flex flex-col items-center p-4 rounded-xl border transition-all ${
+                        captchaToken
+                          ? 'border-green-500/50 bg-green-500/10'
+                          : 'border-gray-700 bg-gray-800/50'
+                      }`}
+                    >
+                      {/* reCAPTCHA Widget */}
+                      <div className="mb-3">
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={RECAPTCHA_SITE_KEY}
+                          onChange={(token) => setCaptchaToken(token)}
+                          onExpired={() => setCaptchaToken(null)}
+                          theme="dark"
+                          size="normal"
+                        />
+                      </div>
+
+                      {/* Status Indicator */}
+                      {captchaToken ? (
+                        <div className="flex items-center gap-2 text-green-400 text-sm">
+                          <span className="material-symbols-outlined text-base">
+                            verified
+                          </span>
+                          {language === 'ko'
+                            ? '인증 완료'
+                            : 'Verification Complete'}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                          <span className="material-symbols-outlined text-base">
+                            security
+                          </span>
+                          {language === 'ko'
+                            ? '위의 체크박스를 클릭해주세요'
+                            : 'Please check the box above'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Success/Error Messages */}
+                {submitStatus === 'success' && (
+                  <div className="bg-green-500/20 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">
+                      check_circle
+                    </span>
+                    {language === 'ko'
+                      ? '문의가 성공적으로 전송되었습니다!'
+                      : 'Your inquiry has been sent successfully!'}
+                  </div>
+                )}
+                {submitStatus === 'error' && (
+                  <div className="bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">
+                      error
+                    </span>
+                    {language === 'ko'
+                      ? '전송에 실패했습니다. 다시 시도해주세요.'
+                      : 'Failed to send. Please try again.'}
+                  </div>
+                )}
+                {submitStatus === 'captcha-required' && (
+                  <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-100 dark:border-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">
+                      warning
+                    </span>
+                    {language === 'ko'
+                      ? '보안 인증(CAPTCHA)을 완료해주세요.'
+                      : 'Please complete the security verification (CAPTCHA).'}
+                  </div>
+                )}
+
                 <button
-                  className="w-full bg-ai-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2"
+                  className="w-full bg-ai-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   type="submit"
+                  disabled={isSubmitting}
                 >
-                  문의하기
-                  <span className="material-symbols-outlined text-sm">
-                    arrow_forward
-                  </span>
+                  {isSubmitting ? (
+                    <>
+                      <span className="material-symbols-outlined text-sm animate-spin">
+                        sync
+                      </span>
+                      {language === 'ko' ? '전송 중...' : 'Sending...'}
+                    </>
+                  ) : (
+                    <>
+                      {data.contact.form.submit}
+                      <span className="material-symbols-outlined text-sm">
+                        arrow_forward
+                      </span>
+                    </>
+                  )}
                 </button>
               </form>
             </div>
@@ -1224,17 +1267,20 @@ function LandingPage(): ReactElement {
             {/* Logo & Description */}
             <div className="col-span-2 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <span className="material-symbols-outlined text-2xl text-primary">
-                  auto_graph
-                </span>
+                <img
+                  src="/assets/images/logo/logo-dark.png"
+                  alt="XAI Korea Logo"
+                  className="h-10 w-auto"
+                />
                 <span className="font-display font-bold text-xl tracking-tight">
-                  XAI <span className="text-primary">KOREA</span>
+                  {data.footer.logo.name}{' '}
+                  <span className="text-primary">
+                    {data.footer.logo.highlight}
+                  </span>
                 </span>
               </div>
-              <p className="text-gray-400 text-sm mb-6 max-w-xs leading-relaxed">
-                AI Innovation for
-                <br />
-                Tax & Accounting Professionals.
+              <p className="text-gray-400 text-sm mb-6 max-w-xs leading-relaxed whitespace-pre-line">
+                {data.footer.tagline}
               </p>
               {/* Social Icons */}
               <div className="flex gap-3">
@@ -1242,107 +1288,119 @@ function LandingPage(): ReactElement {
                   href="#"
                   className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
                 >
-                  <span className="text-gray-400 text-sm">f</span>
+                  <span className="text-gray-400 text-sm">
+                    {data.footer.social.facebook}
+                  </span>
                 </a>
                 <a
                   href="#"
                   className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
                 >
-                  <span className="text-gray-400 text-sm">in</span>
+                  <span className="text-gray-400 text-sm">
+                    {data.footer.social.linkedin}
+                  </span>
                 </a>
                 <a
                   href="#"
                   className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
                 >
-                  <span className="text-gray-400 text-sm">X</span>
+                  <span className="text-gray-400 text-sm">
+                    {data.footer.social.twitter}
+                  </span>
                 </a>
               </div>
             </div>
 
             {/* Company */}
             <div>
-              <h4 className="font-bold text-white mb-4">Company</h4>
+              <h4 className="font-bold text-white mb-4">
+                {data.footer.menus.company.title}
+              </h4>
               <ul className="space-y-3 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    회사소개
-                  </a>
-                </li>
-                <li>
-                  <a href="#team" className="hover:text-white transition">
-                    팀 소개
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    채용 정보
-                  </a>
-                </li>
-                <li>
-                  <a href="#contact" className="hover:text-white transition">
-                    오시는 길
-                  </a>
-                </li>
+                {data.footer.menus.company.items.map((item, index) => (
+                  <li key={index}>
+                    {item.href.startsWith('/') ? (
+                      <Link
+                        to={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Solution */}
             <div>
-              <h4 className="font-bold text-white mb-4">Solution</h4>
+              <h4 className="font-bold text-white mb-4">
+                {data.footer.menus.solution.title}
+              </h4>
               <ul className="space-y-3 text-sm text-gray-400">
-                <li>
-                  <a href="#services" className="hover:text-white transition">
-                    XAI Tax
-                  </a>
-                </li>
-                <li>
-                  <a href="#services" className="hover:text-white transition">
-                    XAI Audit
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    API Service
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    연동 사례
-                  </a>
-                </li>
+                {data.footer.menus.solution.items.map((item, index) => (
+                  <li key={index}>
+                    {item.href.startsWith('/') ? (
+                      <Link
+                        to={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <h4 className="font-bold text-white mb-4">Legal</h4>
+              <h4 className="font-bold text-white mb-4">
+                {data.footer.menus.legal.title}
+              </h4>
               <ul className="space-y-3 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    서비스 이용약관
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    개인정보 처리방침
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition">
-                    보안 정책
-                  </a>
-                </li>
+                {data.footer.menus.legal.items.map((item, index) => (
+                  <li key={index}>
+                    {item.href.startsWith('/') ? (
+                      <Link
+                        to={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="hover:text-white transition"
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
           {/* Bottom Bar */}
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
-            <div className="mb-4 md:mb-0">
-              © 2024 XAI KOREA Inc. All rights reserved.
-            </div>
+            <div className="mb-4 md:mb-0">{data.footer.copyright}</div>
             <div className="text-center md:text-right">
-              사업자등록번호 123-45-67890 | 서울특별시 강남구 테헤란로 123
+              {data.footer.businessInfo}
             </div>
           </div>
         </div>

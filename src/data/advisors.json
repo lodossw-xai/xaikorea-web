@@ -1,0 +1,158 @@
+{
+  "ko": {
+    "title": {
+      "highlight": "최고의 전문가",
+      "main": "들과 함께합니다"
+    },
+    "items": [
+      {
+        "name": "박수용",
+        "role": "기술사, 기술지도사",
+        "quote": "",
+        "image": "/assets/images/advisors/park_suyong.jpg",
+        "isHead": false
+      },
+      {
+        "name": "김경성",
+        "role": "송정 세무회계 대표 세무사<br/>경영지도사",
+        "quote": "",
+        "image": "/assets/images/advisors/kim_kyungsung.png",
+        "isHead": false
+      },
+      {
+        "name": "김영필",
+        "role": "경기경제과학진흥원 전문위원<br/>경영학박사",
+        "quote": "",
+        "image": "/assets/images/advisors/kim_youngpil.jpg",
+        "isHead": false
+      },
+      {
+        "name": "박원일",
+        "role": "(주)램프 기술이사",
+        "quote": "",
+        "image": "/assets/images/advisors/park_wonil.jpg",
+        "isHead": false
+      },
+      {
+        "name": "송준원",
+        "role": "송정세무회계 대표 세무사",
+        "quote": "",
+        "image": "/assets/images/advisors/song_junwon.png",
+        "isHead": false
+      },
+      {
+        "name": "이준현",
+        "role": "블루핀 대표 변리사",
+        "quote": "",
+        "image": "/assets/images/advisors/lee_junhyun.jpg",
+        "isHead": false
+      },
+      {
+        "name": "전완기",
+        "role": "한국직업훈련교사협회 회장",
+        "quote": "",
+        "image": "/assets/images/advisors/jun_wanki.jpg",
+        "isHead": false
+      },
+      {
+        "name": "정성훈",
+        "role": "(주)Erownee 대표이사",
+        "quote": "",
+        "image": "/assets/images/advisors/jung_sunghoon.jpg",
+        "isHead": false
+      },
+      {
+        "name": "황디롱",
+        "role": "서울과학종합대학원 교수",
+        "quote": "",
+        "image": "/assets/images/advisors/hwang_dilong.jpg",
+        "isHead": false
+      },
+      {
+        "name": "고우주",
+        "role": "서울과학종합대학원 교수<br/>나무기술(주) AI 본부 상무",
+        "quote": "",
+        "image": "/assets/images/advisors/ko_wooju.png",
+        "isHead": false
+      }
+    ]
+  },
+  "en": {
+    "title": {
+      "highlight": "Top Experts",
+      "main": " Work With Us"
+    },
+    "items": [
+      {
+        "name": "Suyong Park",
+        "role": "Professional Engineer, Certified Technology Consultant",
+        "quote": "",
+        "image": "/assets/images/advisors/park_suyong.jpg",
+        "isHead": true
+      },
+      {
+        "name": "Kyungsung Kim",
+        "role": "Chief Tax Accountant at Songjeong Tax Accounting",
+        "quote": "",
+        "image": "/assets/images/advisors/kim_kyungsung.png",
+        "isHead": false
+      },
+      {
+        "name": "Youngpil Kim",
+        "role": "Senior Advisor at GBSA, Ph.D. in Business",
+        "quote": "",
+        "image": "/assets/images/advisors/kim_youngpil.jpg",
+        "isHead": false
+      },
+      {
+        "name": "Wonil Park",
+        "role": "CTO of LAMP Inc.",
+        "quote": "",
+        "image": "/assets/images/advisors/park_wonil.jpg",
+        "isHead": false
+      },
+      {
+        "name": "Junwon Song",
+        "role": "Chief Tax Accountant<br/>at Songjeong Tax Accounting",
+        "quote": "",
+        "image": "/assets/images/advisors/song_junwon.png",
+        "isHead": false
+      },
+      {
+        "name": "Junhyun Lee",
+        "role": "Representative Patent Attorney at Bluepin",
+        "quote": "",
+        "image": "/assets/images/advisors/lee_junhyun.jpg",
+        "isHead": false
+      },
+      {
+        "name": "Wanki Jun",
+        "role": "President <br/>at Korea Vocational Training Teacher's Association",
+        "quote": "",
+        "image": "/assets/images/advisors/jun_wanki.jpg",
+        "isHead": false
+      },
+      {
+        "name": "Sunghoon Jung",
+        "role": "CEO at Erownee Inc.",
+        "quote": "",
+        "image": "/assets/images/advisors/jung_sunghoon.jpg",
+        "isHead": false
+      },
+      {
+        "name": "Dilong Hwang",
+        "role": "Professor at Seoul School of Integrated Sciences & Technologies (aSSIST)",
+        "quote": "",
+        "image": "/assets/images/advisors/hwang_dilong.jpg",
+        "isHead": false
+      },
+      {
+        "name": "Wooju Ko",
+        "role": "Professor at aSSIST, Executive Director of AI Division at Namu Tech Inc.",
+        "quote": "",
+        "image": "/assets/images/advisors/ko_wooju.png",
+        "isHead": false
+      }
+    ]
+  }
+}

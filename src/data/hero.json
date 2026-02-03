@@ -1,0 +1,36 @@
+{
+  "ko": {
+    "badge": "Data-Driven Intelligence",
+    "title": {
+      "line1": "당신의 해답,",
+      "line2": "우리의 솔루션."
+    },
+    "description": "LLM & RAG 기술로 세무/회계의 혁신을 만듭니다. 복잡한 규정에 대한 정확한 근거와 해답을 제시하여 세무사와 회계사의 업무를 강력하게 지원합니다.",
+    "cta": {
+      "primary": "데모 신청하기",
+      "secondary": "소개 영상 보기"
+    },
+    "stats": [
+      { "value": "500+", "label": "법령 데이터" },
+      { "value": "98%", "label": "정확도" },
+      { "value": "24/7", "label": "실시간 지원" }
+    ]
+  },
+  "en": {
+    "badge": "Data-Driven Intelligence",
+    "title": {
+      "line1": "Your Answers,",
+      "line2": "Our Solutions."
+    },
+    "description": "Revolutionizing tax and accounting with LLM & RAG technology. We provide accurate references and answers to complex regulations, powerfully supporting the work of tax professionals and accountants.",
+    "cta": {
+      "primary": "Request Demo",
+      "secondary": "Watch Video"
+    },
+    "stats": [
+      { "value": "500+", "label": "Legal Data" },
+      { "value": "98%", "label": "Accuracy" },
+      { "value": "24/7", "label": "Live Support" }
+    ]
+  }
+}

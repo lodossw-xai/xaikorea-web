@@ -1,0 +1,77 @@
+{
+  "ko": {
+    "logo": {
+      "name": "XAI",
+      "highlight": "KOREA"
+    },
+    "tagline": "AI Innovation for\nTax & Accounting Professionals.",
+    "social": {
+      "facebook": "f",
+      "linkedin": "in",
+      "twitter": "X"
+    },
+    "menus": {
+      "company": {
+        "title": "Company",
+        "items": [
+          { "label": "팀 소개", "href": "#team" },
+          { "label": "오시는 길", "href": "#contact" }
+        ]
+      },
+      "solution": {
+        "title": "Solution",
+        "items": [{ "label": "CLOA", "href": "#services" }]
+      },
+      "legal": {
+        "title": "Legal",
+        "items": [
+          { "label": "개인정보 처리방침", "href": "/privacy" },
+          { "label": "서비스 이용약관", "href": "/terms" }
+        ]
+      }
+    },
+    "copyright": "© 2026 XAI KOREA Inc. All rights reserved.",
+    "businessInfo": "경기도 성남시 분당구 삼평동 판교로 289번길 20, 경기스타트업랩"
+  },
+  "en": {
+    "logo": {
+      "name": "XAI",
+      "highlight": "KOREA"
+    },
+    "tagline": "AI Innovation for\nTax & Accounting Professionals.",
+    "social": {
+      "facebook": "f",
+      "linkedin": "in",
+      "twitter": "X"
+    },
+    "menus": {
+      "company": {
+        "title": "Company",
+        "items": [
+          { "label": "About Us", "href": "#" },
+          { "label": "Team", "href": "#team" },
+          { "label": "Careers", "href": "#" },
+          { "label": "Directions", "href": "#contact" }
+        ]
+      },
+      "solution": {
+        "title": "Solution",
+        "items": [
+          { "label": "XAI Tax", "href": "#services" },
+          { "label": "XAI Audit", "href": "#services" },
+          { "label": "API Service", "href": "#" },
+          { "label": "Integrations", "href": "#" }
+        ]
+      },
+      "legal": {
+        "title": "Legal",
+        "items": [
+          { "label": "Privacy Policy", "href": "/privacy" },
+          { "label": "Terms of Service", "href": "/terms" }
+        ]
+      }
+    },
+    "copyright": "© 2026 XAI KOREA Inc. All rights reserved.",
+    "businessInfo": "Gyeonggi Startup Lab - 20, Pangyo-ro 289beon-gil, Sampyeong-dong, Bundang-gu, Seongnam-si, Gyeonggi-do,Republic of Korea"
+  }
+}
