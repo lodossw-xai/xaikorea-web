@@ -1,0 +1,42 @@
+[
+  {
+    "name": "송정세무회계",
+    "mark": "/assets/images/partners/songjeong_mark.png",
+    "url": "https://blog.naver.com/yyh1315"
+  },
+  {
+    "name": "블루핀 특허법률사무소",
+    "mark": "/assets/images/partners/bluepin_mark.png",
+    "url": "https://bluepinip.com/"
+  },
+  {
+    "name": "GBSA",
+    "image": "/assets/images/partners/gbsa.png",
+    "url": "https://www.gbsa.or.kr/"
+  },
+  {
+    "name": "aSSIST",
+    "image": "/assets/images/partners/assist.webp",
+    "url": "https://intro.assist.ac.kr/"
+  },
+  {
+    "name": "SDGs",
+    "image": "/assets/images/partners/sdgs.jpg",
+    "url": "https://sdgms.ch/"
+  },
+  {
+    "name": "HRDI",
+    "image": "/assets/images/partners/hrdi.png",
+    "url": "https://hrdi.koreatech.ac.kr/"
+  },
+  {
+    "name": "VTI",
+    "image": "/assets/images/partners/vti.jpg",
+    "url": "https://www.kvtta.or.kr/"
+  },
+  {
+    "name": "KOSA",
+    "image": "/assets/images/partners/kosa.jpg",
+    "url": "https://www.sw.or.kr/"
+  }
+]

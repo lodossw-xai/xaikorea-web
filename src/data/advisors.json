@@ -6,13 +6,6 @@
     },
     "items": [
       {
-        "name": "박수용",
-        "role": "기술사, 기술지도사",
-        "quote": "",
-        "image": "/assets/images/advisors/park_suyong.jpg",
-        "isHead": false
-      },
-      {
         "name": "김경성",
         "role": "송정 세무회계 대표 세무사<br/>경영지도사",
         "quote": "",
