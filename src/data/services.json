@@ -1,7 +1,7 @@
 {
   "ko": {
     "title": {
-      "highlight": "RAG AI",
+      "highlight": "AI",
       "main": "를 활용한<br/>정밀 세무 의견서 작성"
     },
     "description": "수천 페이지의 문서를 검색하는 수고를 덜어드립니다. AI가 필요한 조항과 판례를 즉시 찾아내어 전문가의 업무를 가속화합니다.",
@@ -68,7 +68,7 @@
   },
   "en": {
     "title": {
-      "highlight": "RAG AI",
+      "highlight": "AI",
       "main": "-Powered<br/>Precision Tax Opinions"
     },
     "description": "Save hours of searching through thousands of pages. AI instantly finds the relevant provisions and precedents to accelerate expert work.",
