@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && cp docs/index.html docs/404.html && touch docs/.nojekyll",
+    "build:dev": "tsc -b && vite build --mode devwww && cp docs/index.html docs/404.html && touch docs/.nojekyll",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
