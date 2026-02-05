@@ -5,6 +5,7 @@
  */
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
+import Toast from '../components/common/Toast';
 import ContactSection from '../components/layout/ContactSection';
 import Footer from '../components/layout/Footer';
 import Navigation from '../components/layout/Navigation';
@@ -20,6 +21,16 @@ function LandingPage(): ReactElement {
     if (typeof window === 'undefined') return false;
     return document.documentElement.classList.contains('dark');
   });
+
+  // State for toast notification
+  const [toast, setToast] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: '',
+  });
+
+  const showNotification = (message: string) => {
+    setToast({ isOpen: true, message });
+  };
 
   // Sync with system preference changes
   useEffect(() => {
@@ -123,8 +134,14 @@ function LandingPage(): ReactElement {
                   </span>
                 </a>
                 <a
-                  className="flex items-center justify-center gap-2 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 hover:border-ai-blue dark:hover:border-ai-blue text-gray-900 dark:text-white font-semibold text-lg py-4 px-8 rounded-lg transition"
-                  href="#services"
+                  className="flex items-center justify-center gap-2 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 hover:border-ai-blue dark:hover:border-ai-blue text-gray-900 dark:text-white font-semibold text-lg py-4 px-8 rounded-lg transition cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showNotification(
+                      data.language === 'ko' ? '준비중입니다.' : 'Coming soon.'
+                    );
+                  }}
+                  href="#"
                 >
                   <span className="material-symbols-outlined">play_circle</span>
                   {data.hero.cta.secondary}
@@ -710,6 +727,13 @@ function LandingPage(): ReactElement {
 
       {/* Footer */}
       <Footer />
+
+      {/* Toast Notification */}
+      <Toast
+        isOpen={toast.isOpen}
+        message={toast.message}
+        onClose={() => setToast((prev) => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }
