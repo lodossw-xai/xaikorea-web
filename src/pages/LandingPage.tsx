@@ -64,7 +64,7 @@ function LandingPage(): ReactElement {
 
       {/* Hero Section */}
       <section
-        className="min-h-screen relative flex items-center pt-20 pb-20 md:pb-0 overflow-hidden bg-white dark:bg-[#0B1120] group"
+        className="min-h-screen relative flex items-center pt-28 pb-32 md:pt-20 md:pb-0 overflow-hidden bg-white dark:bg-[#0B1120] group"
         id="home"
       >
         {/* Animated Background */}
@@ -269,7 +269,7 @@ function LandingPage(): ReactElement {
         {/* Scroll Down Indicator */}
         <a
           href="#services"
-          className="absolute bottom-2 md:bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce opacity-50 hover:opacity-100 transition-opacity z-20 cursor-pointer"
+          className="absolute bottom-1 md:bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce opacity-50 hover:opacity-100 transition-opacity z-20 cursor-pointer"
         >
           <span className="text-xs text-gray-500 dark:text-gray-400 mb-2">
             SCROLL DOWN
