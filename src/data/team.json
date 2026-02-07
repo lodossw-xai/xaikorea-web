@@ -1,12 +1,12 @@
 {
   "ko": {
-    "badge": "OUR TEAM",
-    "title": "최고의 전문가들이 함께합니다",
-    "description": "AI 엔지니어와 CPA/세무사가 하나의 팀으로 움직입니다.",
+    "badge": "",
+    "title": "OUR TEAM",
+    "description": "",
     "members": [
       {
         "name": "이종석",
-        "role": "Principal Developer",
+        "role": "CTO / Developer",
         "image": "/assets/images/members/harry.png",
         "bio": []
       },
@@ -25,9 +25,9 @@
     ]
   },
   "en": {
-    "badge": "OUR TEAM",
-    "title": "The Best Experts Work Together",
-    "description": "AI engineers and CPAs/tax accountants work as one team.",
+    "badge": "",
+    "title": "OUR TEAM",
+    "description": "",
     "members": [
       {
         "name": "Harry J. Lee",

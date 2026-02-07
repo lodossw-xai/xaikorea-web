@@ -133,6 +133,25 @@
   animation-play-state: paused;
 }
 
+/* 3-set scrolling for seamless loop */
+.scroll-track-3 {
+  animation: scrollLeft3 45s linear infinite;
+  width: max-content;
+}
+
+.scroll-track-3:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollLeft3 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

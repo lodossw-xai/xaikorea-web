@@ -14,32 +14,24 @@
       "company": {
         "title": "Company",
         "items": [
-          { "label": "회사소개", "href": "#" },
           { "label": "팀 소개", "href": "#team" },
-          { "label": "채용 정보", "href": "#" },
           { "label": "오시는 길", "href": "#contact" }
         ]
       },
       "solution": {
         "title": "Solution",
-        "items": [
-          { "label": "XAI Tax", "href": "#services" },
-          { "label": "XAI Audit", "href": "#services" },
-          { "label": "API Service", "href": "#" },
-          { "label": "연동 사례", "href": "#" }
-        ]
+        "items": [{ "label": "Texia", "href": "#services" }]
       },
       "legal": {
         "title": "Legal",
         "items": [
-          { "label": "서비스 이용약관", "href": "#" },
-          { "label": "개인정보 처리방침", "href": "#" },
-          { "label": "보안 정책", "href": "#" }
+          { "label": "개인정보 처리방침", "href": "/privacy" },
+          { "label": "서비스 이용약관", "href": "/terms" }
         ]
       }
     },
     "copyright": "© 2026 XAI KOREA Inc. All rights reserved.",
-    "businessInfo": "경기도 성남시 분당구 판교로 289번길 20, 스타트업 캠퍼스"
+    "businessInfo": "경기도 성남시 분당구 삼평동 판교로 289번길 20, 경기스타트업랩"
   },
   "en": {
     "logo": {
@@ -74,13 +66,12 @@
       "legal": {
         "title": "Legal",
         "items": [
-          { "label": "Terms of Service", "href": "#" },
-          { "label": "Privacy Policy", "href": "#" },
-          { "label": "Security Policy", "href": "#" }
+          { "label": "Privacy Policy", "href": "/privacy" },
+          { "label": "Terms of Service", "href": "/terms" }
         ]
       }
     },
     "copyright": "© 2026 XAI KOREA Inc. All rights reserved.",
-    "businessInfo": "20, Pangyo-ro 289beon-gil, Bundang-gu, Seongnam-si, Gyeonggi-do, Republic of Korea"
+    "businessInfo": "Gyeonggi Startup Lab - 20, Pangyo-ro 289beon-gil, Sampyeong-dong, Bundang-gu, Seongnam-si, Gyeonggi-do,Republic of Korea"
   }
 }

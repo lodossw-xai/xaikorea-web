@@ -54,3 +54,4 @@ public_html
 netlify/node_modules
 netlify/dist
 .netlify
+docs/CNAME

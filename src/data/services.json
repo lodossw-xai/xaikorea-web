@@ -1,28 +1,28 @@
 {
   "ko": {
     "title": {
-      "highlight": "RAG AI",
+      "highlight": "AI",
       "main": "를 활용한<br/>정밀 세무 의견서 작성"
     },
     "description": "수천 페이지의 문서를 검색하는 수고를 덜어드립니다. AI가 필요한 조항과 판례를 즉시 찾아내어 전문가의 업무를 가속화합니다.",
     "cards": [
       {
         "icon": "manage_search",
-        "title": "맥락 기반 검색",
-        "description": "단순 키워드가 아닌 세법의 맥락을 이해합니다. 모호한 질의에도 관련된 법령과 예규를 정확하게 찾아 매칭합니다.",
+        "title": "지능형 맥락 검색",
+        "description": "단순 키워드를 넘어 세법의 맥락과 의도를 파악합니다. 모호한 질의에도 가장 관련성 높은 법령과 예규를 정확히 찾아냅니다.",
         "isPopular": false
       },
       {
-        "icon": "auto_fix_high",
-        "title": "초안 자동 생성",
-        "description": "검색된 법령을 기반으로 고객 자문서 초안을 자동으로 작성합니다. 고품질 초안 작성으로 업무 시간을 90% 단축하세요.",
+        "icon": "fact_check",
+        "title": "정밀 근거 매칭",
+        "description": "모든 답변에 도출 근거가 된 구체적인 조항과 판례 출처를 명확히 제시합니다. 전문가의 판단에 견고한 신뢰를 더합니다.",
         "isPopular": true,
         "badge": "POPULAR"
       },
       {
         "icon": "update",
-        "title": "실시간 법령 업데이트",
-        "description": "매일 변경되는 세법과 예규를 실시간으로 학습합니다. 절대 뒤처지지 않는 최신 법령 정보를 보장합니다.",
+        "title": "실시간 법령 동기화",
+        "description": "매일 업데이트되는 최신 세법과 판례를 즉시 학습합니다. 규제 변화에 뒤처지지 않는 가장 최신의 법률 정보를 보장합니다.",
         "isPopular": false
       }
     ],
@@ -68,28 +68,28 @@
   },
   "en": {
     "title": {
-      "highlight": "RAG AI",
+      "highlight": "AI",
       "main": "-Powered<br/>Precision Tax Opinions"
     },
     "description": "Save hours of searching through thousands of pages. AI instantly finds the relevant provisions and precedents to accelerate expert work.",
     "cards": [
       {
         "icon": "manage_search",
-        "title": "Context-Based Search",
-        "description": "Understands tax law context, not just keywords. Accurately matches relevant statutes and rulings even for ambiguous queries.",
+        "title": "Intelligent Context Search",
+        "description": "Goes beyond keywords to understand the intent and context of tax law. Accurately finds the most relevant statutes and rulings.",
         "isPopular": false
       },
       {
-        "icon": "auto_fix_high",
-        "title": "Auto Draft Generation",
-        "description": "Automatically creates client advisory drafts based on searched regulations. Reduce work time by 90% with high-quality drafts.",
+        "icon": "fact_check",
+        "title": "Precise Evidence Matching",
+        "description": "Clearly provides specific provisions and case law sources for every response. Adds solid reliability to expert judgments.",
         "isPopular": true,
         "badge": "POPULAR"
       },
       {
         "icon": "update",
-        "title": "Real-time Law Updates",
-        "description": "Learns daily changes in tax laws and rulings in real-time. Guaranteed up-to-date legal information.",
+        "title": "Real-time Law Sync",
+        "description": "Instantly learns the latest tax laws and precedents updated daily. Guarantees the most up-to-date legal information.",
         "isPopular": false
       }
     ],

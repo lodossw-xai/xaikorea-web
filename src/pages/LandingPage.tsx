@@ -5,106 +5,15 @@
  */
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
+import Toast from '../components/common/Toast';
+import ContactSection from '../components/layout/ContactSection';
+import Footer from '../components/layout/Footer';
+import Navigation from '../components/layout/Navigation';
+import partnersData from '../data/partners.json';
 import { useLocalizedData } from '../hooks/useLocalizedData';
-import useLanguageStore from '../store/languageStore';
-
-// Netlify Functions API URL (set in .env as VITE_CONTACT_API_URL)
-// Example: https://your-netlify-site.netlify.app/.netlify/functions/submit-contact
-const CONTACT_API_URL = import.meta.env.VITE_CONTACT_API_URL || '';
-
-interface ContactFormData {
-  name: string;
-  company: string;
-  email: string;
-  inquiryType: string;
-  message: string;
-  timestamp: string;
-}
 
 function LandingPage(): ReactElement {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { language, setLanguage } = useLanguageStore();
   const data = useLocalizedData();
-
-  // Contact form state
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    company: '',
-    email: '',
-    inquiryType: 'service',
-    message: '',
-    timestamp: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    'idle' | 'success' | 'error'
-  >('idle');
-
-  // Handle form input changes
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ): void => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Handle form submission to Google Sheets
-  const handleFormSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    e.preventDefault();
-
-    if (!CONTACT_API_URL) {
-      console.error('Contact API URL is not configured');
-      setSubmitStatus('error');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-
-    try {
-      const submitData = {
-        ...formData,
-        timestamp: new Date().toISOString(),
-      };
-
-      const response = await fetch(CONTACT_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submitData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          company: '',
-          email: '',
-          inquiryType: 'service',
-          message: '',
-          timestamp: '',
-        });
-      } else {
-        throw new Error(result.error || 'Unknown error');
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   // Initialize dark mode state from current DOM state
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -112,6 +21,16 @@ function LandingPage(): ReactElement {
     if (typeof window === 'undefined') return false;
     return document.documentElement.classList.contains('dark');
   });
+
+  // State for toast notification
+  const [toast, setToast] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: '',
+  });
+
+  const showNotification = (message: string) => {
+    setToast({ isOpen: true, message });
+  };
 
   // Sync with system preference changes
   useEffect(() => {
@@ -138,196 +57,14 @@ function LandingPage(): ReactElement {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-              <img
-                src="/assets/images/logo/logo-light.png"
-                alt="XAI Korea Logo"
-                className="h-12 w-auto dark:hidden"
-              />
-              <img
-                src="/assets/images/logo/logo-dark.png"
-                alt="XAI Korea Logo"
-                className="h-12 w-auto hidden dark:block"
-              />
-              <span className="font-display font-bold text-2xl tracking-tight text-gray-900 dark:text-white">
-                XAI <span className="text-primary">Korea</span>
-              </span>
-            </div>
-
-            <div className="hidden md:flex space-x-8 items-center">
-              <a
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
-                href="#home"
-              >
-                {data.navigation.nav.home}
-              </a>
-              <a
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
-                href="#services"
-              >
-                {data.navigation.nav.services}
-              </a>
-              <a
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
-                href="#advisors"
-              >
-                {data.navigation.nav.advisors}
-              </a>
-              <a
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition"
-                href="#team"
-              >
-                {data.navigation.nav.team}
-              </a>
-
-              <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full px-1 py-1">
-                <button
-                  className={`px-3 py-1 text-xs font-bold transition ${
-                    language === 'en'
-                      ? 'bg-gray-900 text-white rounded-full'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
-                  onClick={() => setLanguage('en')}
-                >
-                  EN
-                </button>
-                <button
-                  className={`px-3 py-1 text-xs font-bold transition ${
-                    language === 'ko'
-                      ? 'bg-gray-900 text-white rounded-full'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
-                  onClick={() => setLanguage('ko')}
-                >
-                  KR
-                </button>
-              </div>
-
-              <a
-                className="bg-primary hover:bg-primary-hover text-black font-bold py-2.5 px-6 rounded-lg transition shadow-lg shadow-yellow-500/20"
-                href="#contact"
-              >
-                {data.navigation.nav.contact}
-              </a>
-
-              <button
-                className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition"
-                onClick={handleDarkModeToggle}
-                aria-label={
-                  isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
-                }
-                title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
-              >
-                <span className="material-symbols-outlined">
-                  {isDarkMode ? 'light_mode' : 'dark_mode'}
-                </span>
-              </button>
-            </div>
-
-            <div className="md:hidden flex items-center">
-              <button
-                className="text-gray-500 hover:text-gray-900 dark:text-white focus:outline-none"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <span className="material-symbols-outlined text-3xl">menu</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden absolute top-full left-0 w-full bg-white dark:bg-background-dark border-b border-gray-200 dark:border-gray-800 shadow-lg transition-all duration-300 ${
-            mobileMenuOpen
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 -translate-y-4 pointer-events-none'
-          }`}
-        >
-          <div className="px-4 py-6 space-y-4">
-            <a
-              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
-              href="#home"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {data.navigation.nav.home}
-            </a>
-            <a
-              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
-              href="#services"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {data.navigation.nav.services}
-            </a>
-            <a
-              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
-              href="#advisors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {data.navigation.nav.advisors}
-            </a>
-            <a
-              className="block text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-primary font-medium transition py-2"
-              href="#team"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {data.navigation.nav.team}
-            </a>
-
-            <div className="flex items-center justify-center gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full px-1 py-1">
-                <button
-                  className={`px-3 py-1 text-xs font-bold transition ${
-                    language === 'en'
-                      ? 'bg-gray-900 text-white rounded-full'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
-                  onClick={() => setLanguage('en')}
-                >
-                  EN
-                </button>
-                <button
-                  className={`px-3 py-1 text-xs font-bold transition ${
-                    language === 'ko'
-                      ? 'bg-gray-900 text-white rounded-full'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
-                  onClick={() => setLanguage('ko')}
-                >
-                  KR
-                </button>
-              </div>
-
-              <button
-                className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition"
-                onClick={handleDarkModeToggle}
-                aria-label={
-                  isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
-                }
-                title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
-              >
-                <span className="material-symbols-outlined">
-                  {isDarkMode ? 'light_mode' : 'dark_mode'}
-                </span>
-              </button>
-            </div>
-
-            <a
-              className="block text-center bg-primary hover:bg-primary-hover text-black font-bold py-3 px-6 rounded-lg transition shadow-lg shadow-yellow-500/20"
-              href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {data.navigation.nav.contact}
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navigation
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={handleDarkModeToggle}
+      />
 
       {/* Hero Section */}
       <section
-        className="min-h-screen relative flex items-center pt-20 overflow-hidden bg-white dark:bg-[#0B1120] group"
+        className="min-h-screen relative flex items-center pt-28 pb-32 md:pt-20 md:pb-0 overflow-hidden bg-white dark:bg-[#0B1120] group"
         id="home"
       >
         {/* Animated Background */}
@@ -397,11 +134,50 @@ function LandingPage(): ReactElement {
                   </span>
                 </a>
                 <a
-                  className="flex items-center justify-center gap-2 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 hover:border-ai-blue dark:hover:border-ai-blue text-gray-900 dark:text-white font-semibold text-lg py-4 px-8 rounded-lg transition"
-                  href="#services"
+                  className="flex items-center justify-center gap-2 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 hover:border-ai-blue dark:hover:border-ai-blue text-gray-900 dark:text-white font-semibold text-lg py-4 px-8 rounded-lg transition cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showNotification(
+                      data.language === 'ko' ? '준비중입니다.' : 'Coming soon.'
+                    );
+                  }}
+                  href="#"
                 >
                   <span className="material-symbols-outlined">play_circle</span>
                   {data.hero.cta.secondary}
+                </a>
+              </div>
+
+              {/* GitHub & Hugging Face Links - Terminal Style */}
+              <div className="flex flex-wrap items-center gap-6 mt-6 font-mono text-sm">
+                <a
+                  href="https://github.com/xaikorea"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition group"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                  </svg>
+                  <span className="group-hover:underline">xaikorea</span>
+                </a>
+                <span className="text-gray-300 dark:text-gray-600">|</span>
+                <a
+                  href="https://huggingface.co/datasets/xaikorea0/taxia-korean-tax-laws"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition group"
+                >
+                  <span className="grayscale group-hover:grayscale-0 transition">
+                    🤗
+                  </span>
+                  <span className="group-hover:underline">
+                    taxia-korean-tax-laws
+                  </span>
                 </a>
               </div>
             </div>
@@ -491,42 +267,17 @@ function LandingPage(): ReactElement {
         </div>
 
         {/* Scroll Down Indicator */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce opacity-50 hover:opacity-100 transition-opacity z-20 pointer-events-auto cursor-pointer">
+        <a
+          href="#services"
+          className="absolute bottom-1 md:bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce opacity-50 hover:opacity-100 transition-opacity z-20 cursor-pointer"
+        >
           <span className="text-xs text-gray-500 dark:text-gray-400 mb-2">
             SCROLL DOWN
           </span>
           <span className="material-symbols-outlined text-gray-400 dark:text-gray-600">
             keyboard_arrow_down
           </span>
-        </div>
-      </section>
-
-      {/* Partners Section */}
-      <section className="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-black/40 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-8">
-            업계 최고의 파트너들과 함께합니다
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">account_balance</span>{' '}
-              TaxCorp
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">analytics</span>{' '}
-              AuditFlow
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">gavel</span> LegalAI
-            </div>
-            <div className="flex items-center gap-2 text-xl font-bold text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-default">
-              <span className="material-symbols-outlined">
-                assured_workload
-              </span>{' '}
-              TrustTax
-            </div>
-          </div>
-        </div>
+        </a>
       </section>
 
       {/* Services Section */}
@@ -728,64 +479,6 @@ function LandingPage(): ReactElement {
         </div>
       </section>
 
-      {/* Advisors Section - Rolling Banner */}
-      <section
-        className="py-24 bg-surface-light dark:bg-background-dark border-y border-gray-200 dark:border-gray-800 overflow-hidden"
-        id="advisors"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-16 reveal-text">
-            <span className="text-ai-blue">
-              {data.advisors.title.highlight}
-            </span>
-            {data.advisors.title.main}
-          </h2>
-        </div>
-
-        {/* Rolling Banner Container */}
-        <div className="relative">
-          {/* Gradient Overlay - Left */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
-          {/* Gradient Overlay - Right */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
-
-          {/* Scrolling Track */}
-          <div className="flex gap-6 scroll-track">
-            {/* Original Cards + Duplicates for seamless loop */}
-            {[...Array(2)].map((_, setIndex) => (
-              <div key={setIndex} className="flex gap-6">
-                {data.advisors.items.map((advisor, index) => (
-                  <div
-                    key={index}
-                    className="w-[220px] shrink-0 bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative hover:shadow-lg hover:border-primary dark:hover:border-primary transition-all duration-300 group"
-                  >
-                    {advisor.isHead && (
-                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-black px-3 py-0.5 text-[10px] font-bold rounded-full shadow-md whitespace-nowrap">
-                        HEAD ADVISOR
-                      </div>
-                    )}
-                    <div className="flex flex-col items-center text-center">
-                      <img
-                        alt={advisor.name}
-                        className="w-20 h-20 rounded-full object-cover ring-3 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary mb-4 transition-all duration-300"
-                        src={advisor.image}
-                      />
-                      <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
-                        {advisor.name}
-                      </h4>
-                      <p
-                        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
-                        dangerouslySetInnerHTML={{ __html: advisor.role }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Team Section */}
       <section
         className="py-24 bg-surface-light dark:bg-background-dark"
@@ -829,6 +522,64 @@ function LandingPage(): ReactElement {
                     <p key={bioIndex}>{line}</p>
                   ))}
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Advisors Section - Rolling Banner */}
+      <section
+        className="py-24 bg-surface-light dark:bg-background-dark border-y border-gray-200 dark:border-gray-800 overflow-hidden"
+        id="advisors"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center font-display font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-16 reveal-text">
+            <span className="text-ai-blue">
+              {data.advisors.title.highlight}
+            </span>
+            {data.advisors.title.main}
+          </h2>
+        </div>
+
+        {/* Rolling Banner Container */}
+        <div className="relative">
+          {/* Gradient Overlay - Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient Overlay - Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-surface-light dark:from-background-dark to-transparent z-10 pointer-events-none"></div>
+
+          {/* Scrolling Track */}
+          <div className="flex gap-6 scroll-track">
+            {/* Original Cards + Duplicates for seamless loop */}
+            {[...Array(2)].map((_, setIndex) => (
+              <div key={setIndex} className="flex gap-6">
+                {data.advisors.items.map((advisor, index) => (
+                  <div
+                    key={index}
+                    className="w-[220px] shrink-0 bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative hover:shadow-lg hover:border-primary dark:hover:border-primary transition-all duration-300 group"
+                  >
+                    {advisor.isHead && (
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-black px-3 py-0.5 text-[10px] font-bold rounded-full shadow-md whitespace-nowrap">
+                        HEAD ADVISOR
+                      </div>
+                    )}
+                    <div className="flex flex-col items-center text-center">
+                      <img
+                        alt={advisor.name}
+                        className="w-20 h-20 rounded-full object-cover ring-3 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary mb-4 transition-all duration-300"
+                        src={advisor.image}
+                      />
+                      <h4 className="font-bold text-gray-900 dark:text-white text-base mb-1">
+                        {advisor.name}
+                      </h4>
+                      <p
+                        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                        dangerouslySetInnerHTML={{ __html: advisor.role }}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -911,345 +662,78 @@ function LandingPage(): ReactElement {
       </section>
        */}
 
-      {/* Contact Section */}
-      <section className="bg-hero-dark text-white py-20" id="contact">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-stretch">
-            {/* Left - Header & Company Info & Map */}
-            <div className="flex flex-col">
-              {/* Section Header */}
-              <div className="mb-10">
-                <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
-                  {data.contact.title}
-                </h2>
-                <p className="text-gray-400 max-w-xl whitespace-pre-line">
-                  {data.contact.description}
-                </p>
-              </div>
+      {/* Partners Section - Rolling Banner */}
+      <section className="py-12 bg-white dark:bg-black/40 border-y border-gray-100 dark:border-gray-800 overflow-hidden">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+          <p className="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+            업계 최고의 파트너들과 함께합니다
+          </p>
+        </div> */}
+        <div className="relative">
+          {/* Gradient Overlay - Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-white dark:from-[#0B1120] to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient Overlay - Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-white dark:from-[#0B1120] to-transparent z-10 pointer-events-none"></div>
 
-              <div className="space-y-6">
-                {/* Address */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      location_on
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white mb-1">
-                      {data.contact.info.address.label}
-                    </h4>
-                    <p className="text-gray-400 text-sm">
-                      {data.contact.info.address.value}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      call
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white mb-1">
-                      {data.contact.info.phone.label}
-                    </h4>
-                    <p className="text-gray-400 text-sm">
-                      {data.contact.info.phone.value}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      mail
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white mb-1">
-                      {data.contact.info.email.label}
-                    </h4>
-                    <p className="text-gray-400 text-sm">
-                      {data.contact.info.email.value}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Map - Google Map Embed */}
-                <div className="mt-8 flex-1 flex flex-col">
-                  <div className="bg-gray-800 rounded-2xl overflow-hidden flex-1 min-h-[250px] relative">
-                    {/* Google Map iframe - Uses embed URL (no API key required) */}
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3169.3735759858837!2d127.1034054764739!3d37.40464407208092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca78a6e513e53%3A0xa9d8193a7f4470f0!2z7YyQ6rWQ7YWM7YGs64W467C466as7Iqk7YOA7Yq47JeF7Lqg7Y287Iqk!5e0!3m2!1sko!2skr!4v1767321462084!5m2!1sko!2skr"
-                      className="absolute inset-0 w-full h-full"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="XAI Korea Office Location"
-                    ></iframe>
-                    {/* Map overlay button */}
-                    <a
-                      href="https://maps.google.com/?q=경기도+성남시+분당구+판교로+289번길+20"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black transition z-10"
-                    >
-                      <span className="material-symbols-outlined text-sm">
-                        map
-                      </span>
-                      {data.contact.mapButton}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right - Contact Form */}
-            <div className="bg-background-dark p-8 rounded-2xl border border-gray-800 flex flex-col">
-              <form
-                className="space-y-5 flex flex-col flex-1"
-                onSubmit={handleFormSubmit}
-              >
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-400 text-sm mb-2">
-                      {data.contact.form.name}
-                    </label>
-                    <input
-                      className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
-                      placeholder={data.contact.form.namePlaceholder}
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-400 text-sm mb-2">
-                      {data.contact.form.company}
-                    </label>
-                    <input
-                      className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
-                      placeholder={data.contact.form.companyPlaceholder}
-                      type="text"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">
-                    {data.contact.form.email}
-                  </label>
-                  <input
-                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition"
-                    placeholder={data.contact.form.emailPlaceholder}
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">
-                    {data.contact.form.type}
-                  </label>
-                  <select
-                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition appearance-none cursor-pointer"
-                    name="inquiryType"
-                    value={formData.inquiryType}
-                    onChange={handleInputChange}
-                  >
-                    {data.contact.form.typeOptions.map((option, index) => (
-                      <option key={index} value={option.value}>
-                        {option.label}
-                      </option>
+          {/* Partners List */}
+          {(() => {
+            return (
+              <div className="flex gap-16 scroll-track-3">
+                {[...Array(3)].map((_, setIndex) => (
+                  <div key={setIndex} className="flex gap-16 items-center">
+                    {partnersData.map((partner, pIndex) => (
+                      <a
+                        key={`${setIndex}-${pIndex}`}
+                        href={partner.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex shrink-0 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300 ${
+                          partner.mark
+                            ? 'flex-col items-center gap-1'
+                            : 'items-center justify-center'
+                        }`}
+                        title={partner.name}
+                      >
+                        {partner.mark ? (
+                          <>
+                            <img
+                              src={partner.mark}
+                              alt={partner.name}
+                              className="h-10 w-auto object-contain"
+                            />
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                              {partner.name}
+                            </span>
+                          </>
+                        ) : (
+                          <img
+                            src={partner.image}
+                            alt={partner.name}
+                            className="h-16 w-auto object-contain"
+                          />
+                        )}
+                      </a>
                     ))}
-                  </select>
-                </div>
-
-                <div className="flex-1 flex flex-col">
-                  <label className="block text-gray-400 text-sm mb-2">
-                    {data.contact.form.message}
-                  </label>
-                  <textarea
-                    className="w-full flex-1 min-h-[100px] bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-ai-blue focus:ring-1 focus:ring-ai-blue transition resize-none"
-                    placeholder={data.contact.form.messagePlaceholder}
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                  ></textarea>
-                </div>
-
-                {/* Success/Error Messages */}
-                {submitStatus === 'success' && (
-                  <div className="bg-green-500/20 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-lg">
-                      check_circle
-                    </span>
-                    {language === 'ko'
-                      ? '문의가 성공적으로 전송되었습니다!'
-                      : 'Your inquiry has been sent successfully!'}
                   </div>
-                )}
-                {submitStatus === 'error' && (
-                  <div className="bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-lg">
-                      error
-                    </span>
-                    {language === 'ko'
-                      ? '전송에 실패했습니다. 다시 시도해주세요.'
-                      : 'Failed to send. Please try again.'}
-                  </div>
-                )}
-
-                <button
-                  className="w-full bg-ai-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="material-symbols-outlined text-sm animate-spin">
-                        sync
-                      </span>
-                      {language === 'ko' ? '전송 중...' : 'Sending...'}
-                    </>
-                  ) : (
-                    <>
-                      {data.contact.form.submit}
-                      <span className="material-symbols-outlined text-sm">
-                        arrow_forward
-                      </span>
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </section>
 
+      {/* Contact Section */}
+      <ContactSection />
+
       {/* Footer */}
-      <footer className="bg-hero-dark text-white pt-16 pb-8 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-            {/* Logo & Description */}
-            <div className="col-span-2 md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <img
-                  src="/assets/images/logo/logo-dark.png"
-                  alt="XAI Korea Logo"
-                  className="h-10 w-auto"
-                />
-                <span className="font-display font-bold text-xl tracking-tight">
-                  {data.footer.logo.name}{' '}
-                  <span className="text-primary">
-                    {data.footer.logo.highlight}
-                  </span>
-                </span>
-              </div>
-              <p className="text-gray-400 text-sm mb-6 max-w-xs leading-relaxed whitespace-pre-line">
-                {data.footer.tagline}
-              </p>
-              {/* Social Icons */}
-              <div className="flex gap-3">
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
-                >
-                  <span className="text-gray-400 text-sm">
-                    {data.footer.social.facebook}
-                  </span>
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
-                >
-                  <span className="text-gray-400 text-sm">
-                    {data.footer.social.linkedin}
-                  </span>
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition"
-                >
-                  <span className="text-gray-400 text-sm">
-                    {data.footer.social.twitter}
-                  </span>
-                </a>
-              </div>
-            </div>
+      <Footer />
 
-            {/* Company */}
-            <div>
-              <h4 className="font-bold text-white mb-4">
-                {data.footer.menus.company.title}
-              </h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                {data.footer.menus.company.items.map((item, index) => (
-                  <li key={index}>
-                    <a href={item.href} className="hover:text-white transition">
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Solution */}
-            <div>
-              <h4 className="font-bold text-white mb-4">
-                {data.footer.menus.solution.title}
-              </h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                {data.footer.menus.solution.items.map((item, index) => (
-                  <li key={index}>
-                    <a href={item.href} className="hover:text-white transition">
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 className="font-bold text-white mb-4">
-                {data.footer.menus.legal.title}
-              </h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                {data.footer.menus.legal.items.map((item, index) => (
-                  <li key={index}>
-                    <a href={item.href} className="hover:text-white transition">
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
-            <div className="mb-4 md:mb-0">{data.footer.copyright}</div>
-            <div className="text-center md:text-right">
-              {data.footer.businessInfo}
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Toast Notification */}
+      <Toast
+        isOpen={toast.isOpen}
+        message={toast.message}
+        onClose={() => setToast((prev) => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

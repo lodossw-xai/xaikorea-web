@@ -3,6 +3,9 @@
 interface ImportMetaEnv {
   readonly VITE_CONTACT_API_URL: string;
   readonly VITE_APP_ENV: string;
+  readonly VITE_SITE_URL: string;
+  readonly VITE_SITE_DOMAIN: string;
+  readonly VITE_RECAPTCHA_SITE_KEY: string;
 }
 
 interface ImportMeta {

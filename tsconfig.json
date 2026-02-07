@@ -22,6 +22,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
 
     /* Path aliases */
     "baseUrl": ".",
